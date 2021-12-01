@@ -22,6 +22,7 @@ usethis::use_package( "thinkr" )
 golem::add_module( name = "tratamento" ) # Name of the module
 golem::add_module( name = "edicao" ) # Name of the module
 golem::add_module( name = "status" ) # Name of the module
+golem::add_module( name = "carga")
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*

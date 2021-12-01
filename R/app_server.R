@@ -15,4 +15,5 @@ app_server <- function( input, output, session ) {
   )
   mod_tratamento_server("tratamento_1")
   mod_status_server("status_1")
+  mod_carga_server("carga_1")
 }
