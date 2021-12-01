@@ -95,7 +95,7 @@ mod_tratamento_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     #Importando dados
-
+    options(scipen=999)
     options(shiny.maxRequestSize=80*1024^3) # Maximum upload size allowed, in bytes
     #Aneel
     myData <- reactive({
