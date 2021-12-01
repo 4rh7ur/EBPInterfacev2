@@ -100,7 +100,7 @@ mod_tratamento_server <- function(id){
     #Aneel
     myData <- reactive({
       inFile <- input$file1
-      if (is.null(inFile1)) return(NULL)
+      if (is.null(inFile)) return(NULL)
       inFile11 <- input$file11
       if (is.null(inFile11)) return(NULL)
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
