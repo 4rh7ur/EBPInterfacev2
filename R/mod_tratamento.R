@@ -32,7 +32,7 @@ mod_tratamento_ui <- function(id){
                                                    "text/comma-separated-values,text/plain",
                                                    ".csv")),
 
-                              downloadButton(ns("download"), "Baixar Dataset"),
+                              downloadButton(ns("download"), "Executar Tratamento e Baixar Dataset"),
                               width = 10),
 
              conditionalPanel(condition = "input.id1 == 'Fonte ANP'",
@@ -47,7 +47,7 @@ mod_tratamento_ui <- function(id){
                                                    "text/comma-separated-values,text/plain",
                                                    ".csv")),
 
-                              downloadButton(ns("download2"), "Baixar Dataset"),
+                              downloadButton(ns("download2"), "Executar Tratamento e Baixar Dataset"),
                               width = 10),
 
              conditionalPanel(condition = "input.id1 == 'Fonte BNDES'",
@@ -58,7 +58,7 @@ mod_tratamento_ui <- function(id){
                                                    ".csv")),
 
 
-                              downloadButton(ns("download3"), "Baixar Dataset"),
+                              downloadButton(ns("download3"), "Executar Tratamento e Baixar Dataset"),
                               width = 10),
 
              conditionalPanel(condition = "input.id1 == 'Fonte CNEN'",
@@ -69,7 +69,7 @@ mod_tratamento_ui <- function(id){
                                                    ".csv")),
 
 
-                              downloadButton(ns("download4"), "Baixar Dataset"),
+                              downloadButton(ns("download4"), "Executar Tratamento e Baixar Dataset"),
                               width = 10),
 
              conditionalPanel(condition = "input.id1 == 'Fonte FINEP'",
@@ -79,7 +79,7 @@ mod_tratamento_ui <- function(id){
                                                    "text/comma-separated-values,text/plain",
                                                    ".csv")),
 
-                                                            downloadButton(ns("download5"), "Baixar Dataset"),
+                                                            downloadButton(ns("download5"), "Executar Tratamento e Baixar Dataset"),
                               width = 10),
     )#Fim da fluidrow2
 
