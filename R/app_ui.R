@@ -12,10 +12,11 @@ app_ui <- function(request) {
     fluidPage(tabsetPanel(
               tabPanel("Status", mod_status_ui("status_1")),
               tabPanel("Estação de Tratamento", mod_tratamento_ui("tratamento_1")),
-              tabPanel("Estação de Edição",
-                       DataEditR::dataInputUI("input-1"),
-                       DataEditR::dataOutputUI("tab"),
-                       DataEditR::dataEditUI("edit-1")),
+              tabPanel("Estação de Edição", mod_edicao_ui("edicao_1")
+                       #DataEditR::dataInputUI("input-1"),
+                       #DataEditR::dataOutputUI("tab"),
+                       #DataEditR::dataEditUI("edit-1")
+                       ),
               tabPanel("Estação de Carga", mod_carga_ui("carga_1"))
     )#tabsetPanel
 
