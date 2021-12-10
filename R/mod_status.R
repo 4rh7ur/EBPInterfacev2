@@ -10,6 +10,25 @@
 mod_status_ui <- function(id){
   ns <- NS(id)
   tagList(
+    selectInput("fonte", "Selecione a Fonte dos Dados",
+                choices = c(
+                  "Fonte ANEEL",
+                  "Fonte ANP",
+                  "Fonte BNDES",
+                  "Fonte CNEN",
+                  "Fonte CNPQ",
+                  "Fonte FAPESP",
+                  "Fonte FINEP",
+                  "Fonte FNDCT"
+                ),selected = "Fonte ANEEL"),
+    selectInput("status2", "Selecione o Status",
+                choices = c(
+                  "Não Executada",
+                  "Tratada",
+                  "Em Edição",
+                  "Validada",
+                  "Carregada no SQlite"
+                )),
     tableOutput(ns("status"))
 
   )
@@ -21,14 +40,35 @@ mod_status_ui <- function(id){
 mod_status_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-    df<-data.frame("Fonte" = c("Fonte 1","Fonte 2",
-                               "Fonte 3","Fonte 4",
-                               "Fonte 5","Fonte 6",
-                               "Fonte 7","Fonte 8"),
-                   "Status" = c("Não Executado","Não Executado",
-                                "Não Executado","Não Executado",
-                                "Não Executado","Não Executado",
-                                "Não Executado","Não Executado"))
+    df <- data.frame(
+      "Fonte" = c(
+        "Fonte ANEEL",
+        "Fonte ANP",
+        "Fonte BNDES",
+        "Fonte CNEN",
+        "Fonte CNPQ",
+        "Fonte FAPESP",
+        "Fonte FINEP",
+        "Fonte FNDCT"
+      ),
+      "Status" = c(
+        "Em Edição",
+        "Não Executado",
+        "Não Executado",
+        "Não Executado",
+        "Não Executado",
+        "Não Executado",
+        "Não Executado",
+        "Não Executado"
+      )
+    )
+
+    globals <- reactiveValues(
+      mydf = df
+    )
+
+
+    observe({})
 
     output$status <- renderTable(df)
   })

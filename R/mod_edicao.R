@@ -14,6 +14,7 @@ mod_edicao_ui <- function(id){
           dataInputUI(ns("input1")),
           dataSelectUI(ns("select1")),
           dataFilterUI(ns("filter1")),
+          actionButton("trava",label = "", icon = icon("lock", lib = "font-awesome")),
           dataSyncUI(ns("sync1")),
           dataOutputUI(ns("output-1")),
           dataEditUI(ns("edit1"))
@@ -26,7 +27,19 @@ mod_edicao_ui <- function(id){
 mod_edicao_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-
+    nome_colunas <- c("X","id","fonte_dados",
+                        "data_assinatura","data_limite","duracao_dias",
+                        "titulo_projeto", "status_projeto", "valor_contratado",
+                        "valor_executado_2013_2020", "nome_agente_financiador",
+                        "natureza_agente_financiador", "modalidade_financiamento",
+                        "nome_agente_executor",    "natureza_agente_executor",
+                        "uf_ag_executor", "regiao_ag_executor",
+                        "p.d_ou_demonstracao",     "valor_executado_2013",
+                        "valor_executado_2014",    "valor_executado_2015",
+                        "valor_executado_2016",    "valor_executado_2017",
+                        "valor_executado_2018",    "valor_executado_2019",
+                        "valor_executado_2020",    "motor",
+                        "categorias")
     values <- reactiveValues(data = NULL, data_active = NULL,
                              rows = NULL, columns = NULL)
 
@@ -71,16 +84,23 @@ mod_edicao_server <- function(id){
       }
     })
 
-    data_update <- dataEditServer("edit1", data = reactive(values$data_active),
-                                  col_names = FALSE,
-                                  col_edit = FALSE,
-                                  row_edit = FALSE,
-                                  col_stretch = TRUE
-    )
+
+
+      data_update <- dataEditServer("edit1", data = reactive(values$data_active),
+                                    col_names = FALSE,
+                                    col_edit = FALSE,
+                                    row_edit = FALSE,
+                                    col_stretch = TRUE)
+
+
 
     observe({
       values$data_active <- data_update()
     })
+
+
+
+
 
     data_sync <- dataSyncServer("sync1", data = reactive(values$data),
                                 data_subset = reactive(values$data_active),
@@ -93,6 +113,7 @@ mod_edicao_server <- function(id){
     dataOutputServer("output-1",
                      data = reactive({ values$data_active})
     )
+
 
     #teste
     observeEvent(input$cut, {
