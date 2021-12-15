@@ -45,7 +45,7 @@ mod_carga_server <- function(id){
 
       #identificando o diretorio do .db
       filename <- "data/DB_EIP/EIP_20210415.db"
-
+      con<-DBI::dbConnect(RSQLite::SQLite(),dbname="myDB")
 
       #estabelecendo conexão
       con <- DBI::dbConnect(RSQLite::SQLite(),
@@ -92,8 +92,9 @@ mod_carga_server <- function(id){
     observeEvent(input$carga1, {
 
       #identificando o diretorio do .db
-      filename <- "data/DB_EIP/EIP_20210415.db"
+      #filename <- "data/DB_EIP/EIP_20210415.db"
 
+      #con<-DBI::dbConnect(RSQLite::SQLite(),dbname="myDB")
 
       #estabelecendo conexão
       con <- DBI::dbConnect(RSQLite::SQLite(),
@@ -133,7 +134,7 @@ mod_carga_server <- function(id){
 
       #identificando o diretorio do .db
       filename <- "data/DB_EIP/EIP_20210415.db"
-
+      #con<-DBI::dbConnect(RSQLite::SQLite(),dbname="myDB")
 
       #estabelecendo conexão
       con <- DBI::dbConnect(RSQLite::SQLite(),

@@ -330,19 +330,33 @@ mod_tratamento_server <- function(id){
                             dbname = fonte)
       mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
       mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
+      mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
       mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
 
+      #inserir categorias IEA do sqlite na base
+
+      #criando um objeto com informações sobre as categorias de IEA
       consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
-      m2<-mytbl2 %>% dplyr::select(id,cat2)
-      m3 <- mytbl3 %>% dplyr::select(id_formentador,nme_form)
-      consulta <- dplyr::left_join(consulta, m2,by = c("id_cat2" = "id"))
-      consulta <- dplyr::left_join(consulta, m3, by = c("id_formnt"= "id_formentador"))
 
-      consulta <- consulta %>% dplyr::mutate(id_projeto = paste(nme_form, id_item , sep = "-"))
+      #puxando as descrições das categorias
+      consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
+                            by = c("id_cat2" = "id"))
+      #trazendo as informações de fomentador
+      consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
+                            by = c("id_formnt"= "id_formentador"))
 
-      consulta<-consulta %>% dplyr::select(id_projeto,cat2)
+      #trazendo as informações de titulo
+      consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
 
-      data <- dplyr::left_join(data, consulta, by = c("id"= "id_projeto"))
+      #fazendo o merge
+      data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
+                        by = c("titulo_projeto"= "título")) %>% unique()
+      # criar uma coluna que diz se o caso já existe no sqlite
+      data <- data %>%
+        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
+                               "sim",
+                               "não"))
+
 
       return(data)
     })

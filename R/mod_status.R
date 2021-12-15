@@ -29,7 +29,7 @@ mod_status_ui <- function(id){
                   "Validada",
                   "Carregada no SQlite"
                 )),
-    tableOutput(ns("status"))
+    actionButton("ns(atualizar)", "atualizar status")
 
   )
 }
