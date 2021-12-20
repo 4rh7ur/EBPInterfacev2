@@ -46,7 +46,6 @@ mod_tratamento_ui <- function(id){
         fluidRow(
           conditionalPanel(
             condition = "input.id1 == 'Fonte ANEEL'",
-
             tags$div(style = "display:inline-block",
                      title ="É importante selecionar duas bases para a atualização completa dos dados.
                      A base PD Busca Textual contém todos projetos de P&D com as informações de dispêndio e descrição dos projetos e a base RELATORIO PD RF ENTIDADES adiciona informação sobre os agentes executores dos projetos.",
@@ -150,6 +149,20 @@ mod_tratamento_ui <- function(id){
             ),
 
             downloadButton(ns("download5"), "Executar Tratamento e Baixar Dataset"),
+            width = 10
+          ),
+          conditionalPanel(
+            condition = "input.id1 == 'Fonte FAPESP'",
+            fileInput(
+              ns("file6"),
+              "Indique o diretório de PROJETOS FAPESP SELECIONADOS INOVA-E - VALORES - 13 dez 2021",
+              multiple = FALSE,
+              accept = c("text/csv",
+                         "text/comma-separated-values,text/plain",
+                         ".csv")
+            ),
+
+            downloadButton(ns("download6"), "Executar Tratamento e Baixar Dataset"),
             width = 10
           )
         )
@@ -286,8 +299,21 @@ mod_tratamento_ui <- function(id){
 
               downloadButton(ns("i.download5"), "Executar Tratamento e Baixar Dataset"),
               width = 10
-            )#fim conditional panel
+            ),#fim conditional panel
+            conditionalPanel(
+              condition = "input.id2 == 'Fonte FAPESP'",
+              fileInput(
+                ns("i.file6"),
+                "Indique o diretório de PROJETOS FAPESP SELECIONADOS INOVA-E - VALORES - 13 dez 2021",
+                multiple = FALSE,
+                accept = c("text/csv",
+                           "text/comma-separated-values,text/plain",
+                           ".csv")
+              ),
 
+              downloadButton(ns("i.download6"), "Executar Tratamento e Baixar Dataset"),
+              width = 10
+            )
           )#Fim Fluidrow
 
 
@@ -537,6 +563,47 @@ mod_tratamento_server <- function(id){
       }
     )
 
+    #FAPESP
+
+    myData6 <- reactive({
+      inFile6 <- input$file6
+      if (is.null(inFile6)) return(NULL)
+      #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
+      data <- ETLEBP::cria_base_intermediaria_finep(origem_processos = inFile6$datapath)
+
+      fonte <- "data/DB_EIP/EIP_20210415.db"
+
+      con <- DBI::dbConnect(RSQLite::SQLite(),
+                            ":memory:",
+                            dbname = fonte)
+      mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
+      mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
+      mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
+
+      consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
+      m2<-mytbl2 %>% dplyr::select(id,cat2)
+      m3 <- mytbl3 %>% dplyr::select(id_formentador,nme_form)
+      consulta <- dplyr::left_join(consulta, m2,by = c("id_cat2" = "id"))
+      consulta <- dplyr::left_join(consulta, m3, by = c("id_formnt"= "id_formentador"))
+
+      consulta <- consulta %>% dplyr::mutate(id_projeto = paste(nme_form, id_item , sep = "-"))
+
+      consulta<-consulta %>% dplyr::select(id_projeto,cat2)
+
+      data <- dplyr::left_join(data, consulta, by = c("id"= "id_projeto"))
+
+      return(data)
+    })
+
+    #Fazer o Download
+    output$download6 <- downloadHandler(
+      filename = function() {
+        paste(myData6(), ".csv", sep = "")
+      },
+      content = function(file) {
+        write.csv(myData6(), file, row.names = FALSE)
+      }
+    )
     #Carga incremental
 
     #ANEEL
@@ -557,7 +624,7 @@ mod_tratamento_server <- function(id){
       #importando tabela com os titulos de projeto
       mytbl6 <- ETLEBP::dbReadTable(con,"dm_projeto")
 
-      data <- data %>% dplyr::filter(!titulo_projeto %in% mytbl6$título)
+
 
       return(data)
     })
@@ -590,7 +657,7 @@ mod_tratamento_server <- function(id){
       #importando tabela com os titulos de projeto
       mytbl6 <- ETLEBP::dbReadTable(con,"dm_projeto")
 
-      data <- data %>% dplyr::filter(!titulo_projeto %in% mytbl6$título)
+
 
       return(data)
     })
@@ -619,7 +686,7 @@ mod_tratamento_server <- function(id){
       #importando tabela com os titulos de projeto
       mytbl6 <- ETLEBP::dbReadTable(con,"dm_projeto")
 
-      data <- data %>% dplyr::filter(!titulo_projeto %in% mytbl6$título)
+
 
       return(data)
     })
@@ -648,7 +715,7 @@ mod_tratamento_server <- function(id){
       #importando tabela com os titulos de projeto
       mytbl6 <- ETLEBP::dbReadTable(con,"dm_projeto")
 
-      data <- data %>% dplyr::filter(!titulo_projeto %in% mytbl6$título)
+
 
       return(data)
     })
@@ -677,7 +744,7 @@ mod_tratamento_server <- function(id){
       #importando tabela com os titulos de projeto
       mytbl6 <- ETLEBP::dbReadTable(con,"dm_projeto")
 
-      data <- data %>% dplyr::filter(!titulo_projeto %in% mytbl6$título)
+
 
       return(data)
     })
@@ -689,6 +756,37 @@ mod_tratamento_server <- function(id){
       },
       content = function(file) {
         write.csv(i.myData5(), file, row.names = FALSE)
+      }
+    )
+
+    #FAPESP
+
+    i.myData6 <- reactive({
+      i.inFile6 <- input$i.file6
+      if (is.null(i.inFile6)) return(NULL)
+      #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
+      data <- ETLEBP::cria_base_intermediaria_finep(origem_processos = i.inFile6$datapath)
+
+      #Criando dataset com casos novos
+      filename <- "data/DB_EIP/EIP_20210415.db"
+      con <- DBI::dbConnect(RSQLite::SQLite(),
+                            ":memory:",
+                            dbname = filename)
+      #importando tabela com os titulos de projeto
+      mytbl6 <- ETLEBP::dbReadTable(con,"dm_projeto")
+
+
+
+      return(data)
+    })
+
+    #Fazer o Download
+    output$i.download6 <- downloadHandler(
+      filename = function() {
+        paste(i.myData6(), ".csv", sep = "")
+      },
+      content = function(file) {
+        write.csv(i.myData6(), file, row.names = FALSE)
       }
     )
   })

@@ -3,7 +3,7 @@
 #' @description A shiny Module.
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
-#'
+#' @import RSQlite
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
