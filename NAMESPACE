@@ -2,11 +2,8 @@
 
 export(run_app)
 import(DataEditR)
-import(ETLEBP)
-import(data.table)
+import(RSQLite)
 import(shiny)
-import(shinyjs)
-import(sortable)
 importFrom(golem,activate_js)
 importFrom(golem,add_resource_path)
 importFrom(golem,bundle_resources)

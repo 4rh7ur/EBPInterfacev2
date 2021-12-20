@@ -7,11 +7,19 @@ License: MIT + file LICENSE
 Imports: 
     attempt,
     config (>= 0.3.1),
+    data.table,
+    DataEditR,
+    DBI,
     DT,
+    ETLEBP,
     glue,
     golem (>= 0.3.1.9003),
     htmltools,
+    RSQLite,
     shiny (>= 1.7.1),
+    shinyBS,
+    shinyjs,
+    sortable,
     thinkr
 Encoding: UTF-8
 LazyData: true
@@ -23,3 +31,5 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Language: en-US
+Depends: 
+    R (>= 2.10)

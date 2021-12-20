@@ -1,16 +1,15 @@
 #' edicao UI Function
-#' @import DataEditR
-#' @import shinyjs
 #' @description A shiny Module.
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
 #' @noRd
-#'
+#' @import RSQLite
+#' @import DataEditR
 #' @importFrom shiny NS tagList
 mod_edicao_ui <- function(id){
   ns <- NS(id)
-  tagList(useShinyjs(),
+  tagList(shinyjs::useShinyjs(),
           dataInputUI(ns("input1")),
           dataSelectUI(ns("select1")),
           dataFilterUI(ns("filter1")),

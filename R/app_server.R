@@ -1,5 +1,4 @@
 #' The application server-side
-#' @import DataEditR
 #' @param input,output,session Internal parameters for {shiny}.
 #'     DO NOT REMOVE.
 #' @import shiny

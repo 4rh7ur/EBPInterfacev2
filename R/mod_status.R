@@ -3,9 +3,8 @@
 #' @description A shiny Module.
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
-#' @import RSQlite
 #' @noRd
-#'
+#' @import RSQLite
 #' @importFrom shiny NS tagList
 mod_status_ui <- function(id){
   ns <- NS(id)

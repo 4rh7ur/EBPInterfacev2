@@ -4,7 +4,7 @@
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #' @noRd
-#'
+#' @import RSQLite
 #' @importFrom shiny NS tagList
 mod_carga_ui <- function(id){
   ns <- NS(id)

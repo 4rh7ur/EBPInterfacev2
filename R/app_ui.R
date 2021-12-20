@@ -9,7 +9,8 @@ app_ui <- function(request) {
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # Your application UI logic
-    fluidPage(tabsetPanel(
+    fluidPage(theme = shinythemes::shinytheme("flatly"),
+              tabsetPanel(
               tabPanel("Status", mod_status_ui("status_1")),
               tabPanel("Estação de Tratamento", mod_tratamento_ui("tratamento_1")),
               tabPanel("Estação de Edição", mod_edicao_ui("edicao_1")

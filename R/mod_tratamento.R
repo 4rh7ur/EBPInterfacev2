@@ -1,10 +1,4 @@
 #' tratamento UI Function
-#' @import shiny
-#' @import data.table
-#' @import sortable
-#' @import ETLEBP
-#' @import shinyBS
-#' @import DBI
 #' @description A shiny Module.
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
