@@ -432,7 +432,13 @@ mod_tratamento_server <- function(id){
 
       consulta<-consulta %>% dplyr::select(id_projeto,cat2)
 
-      data <- dplyr::left_join(data, consulta, by = c("id"= "id_projeto"))
+      data <- dplyr::left_join(data, consulta, by = c("id"= "id_projeto")) %>% unique()
+
+
+      data <- data %>%
+        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
+                                      "sim",
+                                      "não"))
       return(data)
     })
 
@@ -474,7 +480,7 @@ mod_tratamento_server <- function(id){
 
       consulta<-consulta %>% dplyr::select(id_projeto,cat2)
 
-      data <- dplyr::left_join(data, consulta, by = c("id"= "id_projeto"))
+      data <- dplyr::left_join(data, consulta, by = c("id"= "id_projeto")) %>% unique()
 
       return(data)
     })
@@ -516,7 +522,13 @@ mod_tratamento_server <- function(id){
 
       consulta<-consulta %>% dplyr::select(id_projeto,cat2)
 
-      data <- dplyr::left_join(data, consulta, by = c("id"= "id_projeto"))
+      data <- dplyr::left_join(data, consulta, by = c("id"= "id_projeto"))%>% unique()
+
+
+      data <- data %>%
+        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
+                                      "sim",
+                                      "não"))
 
       return(data)
     })
@@ -558,7 +570,13 @@ mod_tratamento_server <- function(id){
 
       consulta<-consulta %>% dplyr::select(id_projeto,cat2)
 
-      data <- dplyr::left_join(data, consulta, by = c("id"= "id_projeto"))
+      data <- dplyr::left_join(data, consulta, by = c("id"= "id_projeto"))%>% unique()
+
+
+      data <- data %>%
+        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
+                                      "sim",
+                                      "não"))
 
       return(data)
     })
@@ -602,7 +620,13 @@ mod_tratamento_server <- function(id){
 
       consulta<-consulta %>% dplyr::select(id_projeto,cat2)
 
-      data <- dplyr::left_join(data, consulta, by = c("id"= "id_projeto"))
+      data <- dplyr::left_join(data, consulta, by = c("id"= "id_projeto"))%>% unique()
+
+
+      data <- data %>%
+        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
+                                      "sim",
+                                      "não"))
 
       return(data)
     })
@@ -639,7 +663,10 @@ mod_tratamento_server <- function(id){
       #importando tabela com os titulos de projeto
       mytbl6 <- ETLEBP::dbReadTable(con,"dm_projeto")
 
-
+        data <- data %>%
+        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
+                                      "sim",
+                                      "não"))
 
       return(data)
     })
@@ -676,6 +703,10 @@ mod_tratamento_server <- function(id){
       mytbl6 <- ETLEBP::dbReadTable(con,"dm_projeto")
 
 
+      data <- data %>%
+        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
+                                      "sim",
+                                      "não"))
 
       return(data)
     })
@@ -707,7 +738,10 @@ mod_tratamento_server <- function(id){
       #importando tabela com os titulos de projeto
       mytbl6 <- ETLEBP::dbReadTable(con,"dm_projeto")
 
-
+      data <- data %>%
+        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
+                                      "sim",
+                                      "não"))
 
       return(data)
     })
@@ -739,7 +773,10 @@ mod_tratamento_server <- function(id){
       #importando tabela com os titulos de projeto
       mytbl6 <- ETLEBP::dbReadTable(con,"dm_projeto")
 
-
+      data <- data %>%
+        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
+                                      "sim",
+                                      "não"))
 
       return(data)
     })
@@ -773,7 +810,10 @@ mod_tratamento_server <- function(id){
       mytbl6 <- ETLEBP::dbReadTable(con,"dm_projeto")
 
 
-
+      data <- data %>%
+        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
+                                      "sim",
+                                      "não"))
       return(data)
     })
 
@@ -806,7 +846,10 @@ mod_tratamento_server <- function(id){
       #importando tabela com os titulos de projeto
       mytbl6 <- ETLEBP::dbReadTable(con,"dm_projeto")
 
-
+      data <- data %>%
+        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
+                                      "sim",
+                                      "não"))
 
       return(data)
     })

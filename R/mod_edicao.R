@@ -98,14 +98,29 @@ mod_edicao_server <- function(id){
     })
 
 
-#observeEvent(input$trava,{
-#  data_update <- dataEditServer("edit1", data = reactive(values$data_active),
-#                                col_names = FALSE,
-#                                col_edit = FALSE,
-#                                row_edit = FALSE,
-#                                col_stretch = TRUE)
-#                          }
-#)
+observeEvent(input$trava,{
+  data_update <- dataEditServer("edit1", data = reactive(values$data_active),
+                                col_names = FALSE,
+                                col_edit = FALSE,
+                                row_edit = FALSE,
+                                col_stretch = TRUE,
+                                #read_only = "id",
+                                col_options = list(categorias = c("1.1", "1.2","1.3",
+                                                                  "1.4",
+                                                                  "2.1","2.2","2.3",
+                                                                  "3.1","3.2","3.3",
+                                                                  "3.4","3.5","3.6",
+                                                                  "3.7",
+                                                                  "4.1","4.2",
+                                                                  "5.1","5.2",
+                                                                  "6.1","6.2","6.3",
+                                                                  "7.1","7.2",
+                                                                  "nenhuma categoria encontrada"))
+
+                                )
+
+                          }
+)
 
 
     data_sync <- dataSyncServer("sync1", data = reactive(values$data),

@@ -9,7 +9,7 @@
 mod_status_ui <- function(id){
   ns <- NS(id)
   tagList(
-    selectInput("fonte", "Selecione a Fonte dos Dados",
+    selectInput(ns("fonte"), "Selecione a Fonte dos Dados",
                 choices = c(
                   "Fonte ANEEL",
                   "Fonte ANP",
@@ -20,16 +20,17 @@ mod_status_ui <- function(id){
                   "Fonte FINEP",
                   "Fonte FNDCT"
                 ),selected = "Fonte ANEEL"),
-    selectInput("status2", "Selecione o Status",
+    selectInput(ns("status2"), "Selecione o Status",
                 choices = c(
                   "Não Executada",
                   "Tratada",
                   "Em Edição",
                   "Validada",
                   "Carregada no SQlite"
-                )),
+                ), selected = "Tratada"),
     #dateInput(inputId = "SessionDate", label = "Data", format = "dd-mm-yyyy"),
     actionButton(ns("atualizar"), "atualizar status"),
+   # textOutput(ns("result")),
     dataTableOutput(ns("TheData"))
 
   )
@@ -41,33 +42,54 @@ mod_status_ui <- function(id){
 mod_status_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+df<- data.frame(fonte=c("Fonte ANEEL",
+                 "Fonte ANP",
+                 "Fonte BNDES",
+                 "Fonte CNEN",
+                 "Fonte CNPQ",
+                 "Fonte FAPESP",
+                 "Fonte FINEP",
+                 "Fonte FNDCT"),
+                status = c("Não Executado",
+                           "Não Executado",
+                           "Não Executado",
+                           "Não Executado",
+                           "Não Executado",
+                           "Não Executado",
+                           "Não Executado",
+                           "Não Executado"))
 
-    #Corrigir algum bug
-#observeEvent(input$atualizar, {
-#  status <- DBI::dbConnect(RSQLite::SQLite(), dbname="status_sqlite")
-
-#  t1 <- as.character(input$status2)
-#  t2 <- as.character(input$fonte)
-
-#  query<-sprintf("UPDATE status SET status = '%s' where Fonte = '%s'",
-#                 t1,t2)
-
-#  DBI::dbExecute(status, query)
-
-#  t3<- as.Date(Sys.Date())
-
-#  query2<-sprintf("UPDATE status SET data = '%s' where Fonte = '%s'",
-#                  t3,t2)
-
- # DBI::dbExecute(status, query2)
-
-#  df <- DBI::dbReadTable(status,"status")
+#output$result <- renderText({
+#  paste("You chose", input$status2)
 #})
+    #Corrigir algum bug
+observeEvent(input$atualizar, {
+  status <- DBI::dbConnect(RSQLite::SQLite(), dbname="status_sqlite")
+
+t1<- input$status2
+t2<- input$fonte
+
+  query<-sprintf("UPDATE status SET status = '%s' where Fonte = '%s'",
+                 t1,t2)
+
+  DBI::dbExecute(status, query)
+
+  t3<- as.Date(Sys.Date())
+
+  query2<-sprintf("UPDATE status SET data = '%s' where Fonte = '%s'",
+                  t3,t2)
+
+  DBI::dbExecute(status, query2)
+
+  ndf <- DBI::dbReadTable(status,"status")
+  output$TheData <- renderDataTable({
+    ndf
+  })
+
+})
 
 
-    output$TheData <- renderDataTable({
-      df
-    })
+
   })
 }
 

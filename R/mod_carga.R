@@ -15,8 +15,9 @@ mod_carga_ui <- function(id){
                        accept = c("text/csv",
                                   "text/comma-separated-values,text/plain",
                                   ".csv")),
- shiny::actionButton(ns("carga1"), "Executar Carregamento Completo no SQLite"),
- shiny::actionButton(ns("carga2"), "Executar Carregamento Incremental no SQLite"), width = 10))
+  shiny::fileInput(ns("sqlite"), "Indique o Diretório do SQLite"),
+  shiny::actionButton(ns("carga1"), "Executar Carregamento Completo no SQLite"),
+  shiny::actionButton(ns("carga2"), "Executar Carregamento Incremental no SQLite"), width = 10))
 
 
   )
@@ -45,7 +46,10 @@ mod_carga_server <- function(id){
     observeEvent(input$carga1, {
 
       #identificando o diretorio do .db
-      filename <- "data/DB_EIP/EIP_20210415.db"
+      #filename <- "data/DB_EIP/EIP_20210415.db"
+      filesqlite<- input$sqlite
+      if (is.null(filesqlite)) return(NULL)
+      filename <- filesqlite$datapath
       con<-DBI::dbConnect(RSQLite::SQLite(),
                           dbname="myDB")
 
@@ -104,9 +108,11 @@ mod_carga_server <- function(id){
     observeEvent(input$carga1, {
 
       #identificando o diretorio do .db
-      filename <- "data/DB_EIP/EIP_20210415.db"
+      #filename <- "data/DB_EIP/EIP_20210415.db"
+      filesqlite<- input$sqlite
+      if (is.null(filesqlite)) return(NULL)
+      filename <- filesqlite$datapath
 
-      #con<-DBI::dbConnect(RSQLite::SQLite(),dbname="myDB")
 
       #estabelecendo conexão
       con <- DBI::dbConnect(RSQLite::SQLite(),
@@ -153,8 +159,10 @@ mod_carga_server <- function(id){
       #Carga ft_dispendio
 
       #identificando o diretorio do .db
-      filename <- "data/DB_EIP/EIP_20210415.db"
-      #con<-DBI::dbConnect(RSQLite::SQLite(),dbname="myDB")
+      #filename <- "data/DB_EIP/EIP_20210415.db"
+      filesqlite<- input$sqlite
+      if (is.null(filesqlite)) return(NULL)
+      filename <- filesqlite$datapath
 
       #estabelecendo conexão
       con <- DBI::dbConnect(RSQLite::SQLite(),
@@ -288,7 +296,10 @@ mod_carga_server <- function(id){
     observeEvent(input$carga2, {
 
       #identificando o diretorio do .db
-      filename <- "data/DB_EIP/EIP_20210415.db"
+      #filename <- "data/DB_EIP/EIP_20210415.db"
+      filesqlite<- input$sqlite
+      if (is.null(filesqlite)) return(NULL)
+      filename <- filesqlite$datapath
       con<-DBI::dbConnect(RSQLite::SQLite(),
                           dbname="myDB")
 
@@ -348,7 +359,10 @@ mod_carga_server <- function(id){
     observeEvent(input$carga2, {
 
       #identificando o diretorio do .db
-      filename <- "data/DB_EIP/EIP_20210415.db"
+      #filename <- "data/DB_EIP/EIP_20210415.db"
+      filesqlite<- input$sqlite
+      if (is.null(filesqlite)) return(NULL)
+      filename <- filesqlite$datapath
 
       #con<-DBI::dbConnect(RSQLite::SQLite(),dbname="myDB")
 
@@ -397,8 +411,10 @@ mod_carga_server <- function(id){
 
     #Atualizando Status do Projeto
     observeEvent(input$carga2,{
-      filename <- "data/DB_EIP/EIP_20210415.db"
-
+      #filename <- "data/DB_EIP/EIP_20210415.db"
+      filesqlite<- input$sqlite
+      if (is.null(filesqlite)) return(NULL)
+      filename <- filesqlite$datapath
       #estabelecendo conexão
       con <- DBI::dbConnect(RSQLite::SQLite(),
                             ":memory:",
@@ -417,8 +433,10 @@ mod_carga_server <- function(id){
       #Carga ft_dispendio
 
       #identificando o diretorio do .db
-      filename <- "data/DB_EIP/EIP_20210415.db"
-      #con<-DBI::dbConnect(RSQLite::SQLite(),dbname="myDB")
+      #filename <- "data/DB_EIP/EIP_20210415.db"
+      filesqlite<- input$sqlite
+      if (is.null(filesqlite)) return(NULL)
+      filename <- filesqlite$datapath
 
       #estabelecendo conexão
       con <- DBI::dbConnect(RSQLite::SQLite(),
