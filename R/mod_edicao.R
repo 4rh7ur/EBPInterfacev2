@@ -13,7 +13,7 @@ mod_edicao_ui <- function(id){
           dataInputUI(ns("input1")),
           dataSelectUI(ns("select1")),
           dataFilterUI(ns("filter1")),
-          actionButton("trava",label = "", icon = icon("lock", lib = "font-awesome")),
+          actionButton(ns("trava"),label = "", icon = icon("lock", lib = "font-awesome")),
           dataSyncUI(ns("sync1")),
           dataOutputUI(ns("output-1")),
           dataEditUI(ns("edit1"))
@@ -98,7 +98,14 @@ mod_edicao_server <- function(id){
     })
 
 
-
+#observeEvent(input$trava,{
+#  data_update <- dataEditServer("edit1", data = reactive(values$data_active),
+#                                col_names = FALSE,
+#                                col_edit = FALSE,
+#                                row_edit = FALSE,
+#                                col_stretch = TRUE)
+#                          }
+#)
 
 
     data_sync <- dataSyncServer("sync1", data = reactive(values$data),
