@@ -28,7 +28,9 @@ mod_status_ui <- function(id){
                   "Validada",
                   "Carregada no SQlite"
                 )),
-    actionButton("ns(atualizar)", "atualizar status")
+    #dateInput(inputId = "SessionDate", label = "Data", format = "dd-mm-yyyy"),
+    actionButton(ns("atualizar"), "atualizar status"),
+    dataTableOutput(ns("TheData"))
 
   )
 }
@@ -39,37 +41,33 @@ mod_status_ui <- function(id){
 mod_status_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-    df <- data.frame(
-      "Fonte" = c(
-        "Fonte ANEEL",
-        "Fonte ANP",
-        "Fonte BNDES",
-        "Fonte CNEN",
-        "Fonte CNPQ",
-        "Fonte FAPESP",
-        "Fonte FINEP",
-        "Fonte FNDCT"
-      ),
-      "Status" = c(
-        "Em Edição",
-        "Não Executado",
-        "Não Executado",
-        "Não Executado",
-        "Não Executado",
-        "Não Executado",
-        "Não Executado",
-        "Não Executado"
-      )
-    )
 
-    globals <- reactiveValues(
-      mydf = df
-    )
+    #Corrigir algum bug
+#observeEvent(input$atualizar, {
+#  status <- DBI::dbConnect(RSQLite::SQLite(), dbname="status_sqlite")
+
+#  t1 <- as.character(input$status2)
+#  t2 <- as.character(input$fonte)
+
+#  query<-sprintf("UPDATE status SET status = '%s' where Fonte = '%s'",
+#                 t1,t2)
+
+#  DBI::dbExecute(status, query)
+
+#  t3<- as.Date(Sys.Date())
+
+#  query2<-sprintf("UPDATE status SET data = '%s' where Fonte = '%s'",
+#                  t3,t2)
+
+ # DBI::dbExecute(status, query2)
+
+#  df <- DBI::dbReadTable(status,"status")
+#})
 
 
-    observe({})
-
-    output$status <- renderTable(df)
+    output$TheData <- renderDataTable({
+      df
+    })
   })
 }
 

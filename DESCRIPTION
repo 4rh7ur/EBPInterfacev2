@@ -15,6 +15,7 @@ Imports:
     glue,
     golem (>= 0.3.1.9003),
     htmltools,
+    magrittr,
     RSQLite,
     shiny (>= 1.7.1),
     shinyBS,

@@ -16,6 +16,7 @@ mod_tratamento_ui <- function(id){
         "Selecione o Tipo de Carga",
         choices = c("Carga Completa", "Carga Incremental")
       ),
+      fileInput(ns("file_sqlite"), "Indique o diretório do SQLite"),
       width = 10
     )),
 
@@ -328,7 +329,11 @@ mod_tratamento_server <- function(id){
     ns <- session$ns
     #Importando dados
     options(scipen=999)
-    options(shiny.maxRequestSize=80*1024^3) # Maximum upload size allowed, in bytes
+    options(shiny.maxRequestSize=120*1024^3) # Maximum upload size allowed, in bytes
+
+
+    #filesqlite<- input$file_sqlite
+    #if (is.null(filesqlite)) return(NULL)
 
 #Carga Completa
     #Aneel
@@ -343,8 +348,10 @@ mod_tratamento_server <- function(id){
       data <- ETLEBP::cria_base_intermediaria_aneel(origem_processos = inFile$datapath,
                                                     origem_equipes = inFile11$datapath)
 
-      fonte <- "data/DB_EIP/EIP_20210415.db"
-
+      #fonte <- "data/DB_EIP/EIP_20210415.db"
+      filesqlite<- input$file_sqlite
+      if (is.null(filesqlite)) return(NULL)
+      fonte <- filesqlite$datapath
       con <- DBI::dbConnect(RSQLite::SQLite(),
                             ":memory:",
                             dbname = fonte)
@@ -404,8 +411,10 @@ mod_tratamento_server <- function(id){
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
       data <- ETLEBP::cria_base_intermediaria_anp(origem_processos = inFile2$datapath,
                                                   origem_enriquecimento = inFile22$datapath)
-      fonte <- "data/DB_EIP/EIP_20210415.db"
-
+      #fonte <- "data/DB_EIP/EIP_20210415.db"
+      filesqlite<- input$file_sqlite
+      if (is.null(filesqlite)) return(NULL)
+      fonte <- filesqlite$datapath
       con <- DBI::dbConnect(RSQLite::SQLite(),
                             ":memory:",
                             dbname = fonte)
@@ -443,7 +452,10 @@ mod_tratamento_server <- function(id){
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
       data <- ETLEBP::cria_base_intermediaria_bndes(origem_processos = inFile3$datapath)
 
-      fonte <- "data/DB_EIP/EIP_20210415.db"
+      #fonte <- "data/DB_EIP/EIP_20210415.db"
+      filesqlite<- input$file_sqlite
+      if (is.null(filesqlite)) return(NULL)
+      fonte <- filesqlite$datapath
 
       con <- DBI::dbConnect(RSQLite::SQLite(),
                             ":memory:",
@@ -483,8 +495,10 @@ mod_tratamento_server <- function(id){
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
       data <- ETLEBP::cria_base_intermediaria_cnen(origem_processos = inFile4$datapath)
 
-      fonte <- "data/DB_EIP/EIP_20210415.db"
-
+      #fonte <- "data/DB_EIP/EIP_20210415.db"
+      filesqlite<- input$file_sqlite
+      if (is.null(filesqlite)) return(NULL)
+      fonte <- filesqlite$datapath
       con <- DBI::dbConnect(RSQLite::SQLite(),
                             ":memory:",
                             dbname = fonte)
@@ -523,8 +537,10 @@ mod_tratamento_server <- function(id){
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
       data <- ETLEBP::cria_base_intermediaria_finep(origem_processos = inFile5$datapath)
 
-      fonte <- "data/DB_EIP/EIP_20210415.db"
-
+      #fonte <- "data/DB_EIP/EIP_20210415.db"
+      filesqlite<- input$file_sqlite
+      if (is.null(filesqlite)) return(NULL)
+      fonte <- filesqlite$datapath
       con <- DBI::dbConnect(RSQLite::SQLite(),
                             ":memory:",
                             dbname = fonte)
@@ -565,8 +581,10 @@ mod_tratamento_server <- function(id){
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
       data <- ETLEBP::cria_base_intermediaria_finep(origem_processos = inFile6$datapath)
 
-      fonte <- "data/DB_EIP/EIP_20210415.db"
-
+      #fonte <- "data/DB_EIP/EIP_20210415.db"
+      filesqlite<- input$file_sqlite
+      if (is.null(filesqlite)) return(NULL)
+      fonte <- filesqlite$datapath
       con <- DBI::dbConnect(RSQLite::SQLite(),
                             ":memory:",
                             dbname = fonte)
@@ -611,7 +629,10 @@ mod_tratamento_server <- function(id){
       data <- ETLEBP::cria_base_intermediaria_aneel(origem_processos = i.inFile1$datapath,
                                                     origem_equipes = i.inFile11$datapath)
       #Criando dataset com casos novos
-      filename <- "data/DB_EIP/EIP_20210415.db"
+      #filename <- "data/DB_EIP/EIP_20210415.db"
+      filesqlite<- input$file_sqlite
+      if (is.null(filesqlite)) return(NULL)
+      filename <- filesqlite$datapath
       con <- DBI::dbConnect(RSQLite::SQLite(),
                        ":memory:",
                        dbname = filename)
@@ -644,7 +665,10 @@ mod_tratamento_server <- function(id){
       data <- ETLEBP::cria_base_intermediaria_anp(origem_processos = i.inFile2$datapath,
                                                   origem_enriquecimento = i.inFile22$datapath)
       #Criando dataset com casos novos
-      filename <- "data/DB_EIP/EIP_20210415.db"
+      #filename <- "data/DB_EIP/EIP_20210415.db"
+      filesqlite<- input$file_sqlite
+      if (is.null(filesqlite)) return(NULL)
+      filename <- filesqlite$datapath
       con <- DBI::dbConnect(RSQLite::SQLite(),
                             ":memory:",
                             dbname = filename)
@@ -673,7 +697,10 @@ mod_tratamento_server <- function(id){
       data <- ETLEBP::cria_base_intermediaria_bndes(origem_processos = i.inFile3$datapath)
 
       #Criando dataset com casos novos
-      filename <- "data/DB_EIP/EIP_20210415.db"
+      #filename <- "data/DB_EIP/EIP_20210415.db"
+      filesqlite<- input$file_sqlite
+      if (is.null(filesqlite)) return(NULL)
+      filename <- filesqlite$datapath
       con <- DBI::dbConnect(RSQLite::SQLite(),
                             ":memory:",
                             dbname = filename)
@@ -702,7 +729,10 @@ mod_tratamento_server <- function(id){
       data <- ETLEBP::cria_base_intermediaria_cnen(origem_processos = i.inFile4$datapath)
 
       #Criando dataset com casos novos
-      filename <- "data/DB_EIP/EIP_20210415.db"
+      #filename <- "data/DB_EIP/EIP_20210415.db"
+      filesqlite<- input$file_sqlite
+      if (is.null(filesqlite)) return(NULL)
+      filename <- filesqlite$datapath
       con <- DBI::dbConnect(RSQLite::SQLite(),
                             ":memory:",
                             dbname = filename)
@@ -731,7 +761,11 @@ mod_tratamento_server <- function(id){
       data <- ETLEBP::cria_base_intermediaria_finep(origem_processos = i.inFile5$datapath)
 
       #Criando dataset com casos novos
-      filename <- "data/DB_EIP/EIP_20210415.db"
+      #filename <- "data/DB_EIP/EIP_20210415.db"
+      filesqlite<- input$file_sqlite
+      if (is.null(filesqlite)) return(NULL)
+      filename <- filesqlite$datapath
+
       con <- DBI::dbConnect(RSQLite::SQLite(),
                             ":memory:",
                             dbname = filename)
@@ -762,7 +796,10 @@ mod_tratamento_server <- function(id){
       data <- ETLEBP::cria_base_intermediaria_finep(origem_processos = i.inFile6$datapath)
 
       #Criando dataset com casos novos
-      filename <- "data/DB_EIP/EIP_20210415.db"
+      #filename <- "data/DB_EIP/EIP_20210415.db"
+      filesqlite<- input$file_sqlite
+      if (is.null(filesqlite)) return(NULL)
+      filename <- filesqlite$datapath
       con <- DBI::dbConnect(RSQLite::SQLite(),
                             ":memory:",
                             dbname = filename)
