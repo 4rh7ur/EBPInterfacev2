@@ -74,7 +74,7 @@ t2<- input$fonte
 
   DBI::dbExecute(status, query)
 
-  t3<- as.Date(Sys.Date())
+  t3<- lubridate::ymd_hms(Sys.time())
 
   query2<-sprintf("UPDATE status SET data = '%s' where Fonte = '%s'",
                   t3,t2)

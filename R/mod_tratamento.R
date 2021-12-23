@@ -34,8 +34,8 @@ mod_tratamento_ui <- function(id){
             "Fonte CNEN",
             "Fonte CNPQ",
             "Fonte FAPESP",
-            "Fonte FINEP",
-            "Fonte FNDCT"
+            "Fonte FINEP"#,
+            #"Fonte FNDCT"
           )
         ),
         fluidRow(
@@ -158,6 +158,30 @@ mod_tratamento_ui <- function(id){
             ),
 
             downloadButton(ns("download6"), "Executar Tratamento e Baixar Dataset"),
+            width = 10
+          ),
+
+          conditionalPanel(
+            condition = "input.id1 == 'Fonte CNPQ'",
+            fileInput(
+              ns("file7"),
+              "Indique o diretório de Bolsas no Exterior 2004 a 2021.xlsx",
+              multiple = FALSE,
+              accept = c("text/csv",
+                         "text/comma-separated-values,text/plain",
+                         ".csv")
+            ),
+
+            fileInput(
+              ns("file77"),
+              "Indique o diretório de Bolsas Pais - 2004 a 2021.xlsx",
+              multiple = FALSE,
+              accept = c("text/csv",
+                         "text/comma-separated-values,text/plain",
+                         ".csv")
+            ),
+
+            downloadButton(ns("download7"), "Executar Tratamento e Baixar Dataset"),
             width = 10
           )
         )
@@ -308,7 +332,32 @@ mod_tratamento_ui <- function(id){
 
               downloadButton(ns("i.download6"), "Executar Tratamento e Baixar Dataset"),
               width = 10
+            ),
+
+            conditionalPanel(
+              condition = "input.id2 == 'Fonte CNPQ'",
+              fileInput(
+                ns("i.file7"),
+                "Indique o diretório de Bolsas no Exterior 2004 a 2021.xlsx",
+                multiple = FALSE,
+                accept = c("text/csv",
+                           "text/comma-separated-values,text/plain",
+                           ".csv")
+              ),
+
+              fileInput(
+                ns("i.file77"),
+                "Indique o diretório de Bolsas Pais - 2004 a 2021.xlsx",
+                multiple = FALSE,
+                accept = c("text/csv",
+                           "text/comma-separated-values,text/plain",
+                           ".csv")
+              ),
+
+              downloadButton(ns("i.download7"), "Executar Tratamento e Baixar Dataset"),
+              width = 10
             )
+
           )#Fim Fluidrow
 
 
@@ -640,6 +689,59 @@ mod_tratamento_server <- function(id){
         write.csv(myData6(), file, row.names = FALSE)
       }
     )
+
+   #CNPQ
+
+    myData7<- reactive({
+      inFile7 <- input$file7
+      if (is.null(inFile7)) return(NULL)
+      inFile77 <- input$file77
+      if (is.null(inFile77)) return(NULL)
+      #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
+      data <- ETLEBP::cria_base_intermediaria_cnpq(origem_processos1 = inFile7$datapath,
+                                                   origem_processos2 = inFile77$datapath)
+
+      #fonte <- "data/DB_EIP/EIP_20210415.db"
+      filesqlite<- input$file_sqlite
+      if (is.null(filesqlite)) return(NULL)
+      fonte <- filesqlite$datapath
+      con <- DBI::dbConnect(RSQLite::SQLite(),
+                            ":memory:",
+                            dbname = fonte)
+      mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
+      mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
+      mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
+
+      consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
+      m2<-mytbl2 %>% dplyr::select(id,cat2)
+      m3 <- mytbl3 %>% dplyr::select(id_formentador,nme_form)
+      consulta <- dplyr::left_join(consulta, m2,by = c("id_cat2" = "id"))
+      consulta <- dplyr::left_join(consulta, m3, by = c("id_formnt"= "id_formentador"))
+
+      consulta <- consulta %>% dplyr::mutate(id_projeto = paste(nme_form, id_item , sep = "-"))
+
+      consulta<-consulta %>% dplyr::select(id_projeto,cat2)
+
+      data <- dplyr::left_join(data, consulta, by = c("id"= "id_projeto"))%>% unique()
+
+
+      data <- data %>%
+        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
+                                      "sim",
+                                      "não"))
+
+      return(data)
+    })
+
+    #Fazer o Download
+    output$download7 <- downloadHandler(
+      filename = function() {
+        paste(myData7(), ".csv", sep = "")
+      },
+      content = function(file) {
+        write.csv(myData7(), file, row.names = FALSE)
+      }
+    )
     #Carga incremental
 
     #ANEEL
@@ -863,6 +965,48 @@ mod_tratamento_server <- function(id){
         write.csv(i.myData6(), file, row.names = FALSE)
       }
     )
+
+
+    #CNPQ
+
+    i.myData7 <- reactive({
+      i.inFile7 <- input$i.file7
+      if (is.null(i.inFile7)) return(NULL)
+      i.inFile77 <- input$i.file77
+      if (is.null(i.inFile77)) return(NULL)
+      #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
+      data <- ETLEBP::cria_base_intermediaria_cnpq(origem_processos1 = i.inFile7$datapath,
+                                                   origem_processos2 = i.inFile77$datapath)
+
+      #Criando dataset com casos novos
+      #filename <- "data/DB_EIP/EIP_20210415.db"
+      filesqlite<- input$file_sqlite
+      if (is.null(filesqlite)) return(NULL)
+      filename <- filesqlite$datapath
+      con <- DBI::dbConnect(RSQLite::SQLite(),
+                            ":memory:",
+                            dbname = filename)
+      #importando tabela com os titulos de projeto
+      mytbl6 <- ETLEBP::dbReadTable(con,"dm_projeto")
+
+      data <- data %>%
+        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
+                                      "sim",
+                                      "não"))
+
+      return(data)
+    })
+
+    #Fazer o Download
+    output$i.download7 <- downloadHandler(
+      filename = function() {
+        paste(i.myData7(), ".csv", sep = "")
+      },
+      content = function(file) {
+        write.csv(i.myData7(), file, row.names = FALSE)
+      }
+    )
+
   })
 }
 
