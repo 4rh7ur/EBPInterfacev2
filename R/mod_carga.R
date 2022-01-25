@@ -50,8 +50,8 @@ mod_carga_server <- function(id){
       filesqlite<- input$sqlite
       if (is.null(filesqlite)) return(NULL)
       filename <- filesqlite$datapath
-      con<-DBI::dbConnect(RSQLite::SQLite(),
-                          dbname="myDB")
+      #con<-DBI::dbConnect(RSQLite::SQLite(),
+      #                    dbname="myDB")
 
       #estabelecendo conexão
       con <- DBI::dbConnect(RSQLite::SQLite(),
@@ -62,9 +62,7 @@ mod_carga_server <- function(id){
       mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
       mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
 
-      inicio<-(max(mytbl1$id_agente)+1)
 
-      fim<-(inicio+nrow(data())-1)
 
       dm_agente_empresa <- data() %>%
         dplyr::filter(categorias %in% c(1.1, 1.2, 1.3, 1.4,
@@ -78,8 +76,12 @@ mod_carga_server <- function(id){
         dplyr::select(nome_agente_executor,
                       nome_agente_financiador,
                       uf_ag_executor,
-                      fonte_dados,
+                      fonte_de_dados,
                       natureza_agente_executor)
+
+      inicio<-(max(mytbl1$id_agente)+1)
+
+      fim<-(inicio+nrow(dm_agente_empresa)-1)
 
       dm_agente_empresa <- dm_agente_empresa %>%
         dplyr::mutate(
@@ -136,7 +138,7 @@ mod_carga_server <- function(id){
 
       inicio<-(max(mytbl6$id_projeto)+1)
 
-      fim<-(inicio+nrow(data())-1)
+      fim<-(inicio+nrow(dm_projeto)-1)
 
       dm_projeto <- dm_projeto %>%
         dplyr::mutate(id_projeto = inicio:fim,
@@ -209,7 +211,7 @@ mod_carga_server <- function(id){
                                         7.1, 7.2) ) %>%
         dplyr::select(id, natureza_agente_financiador,
                       data_assinatura,categorias,nome_agente_executor,
-                      fonte_dados, modalidade_financiamento)
+                      fonte_de_dados, modalidade_financiamento)
 
       outra<- bs_res %>% dplyr::select(nome_agente_executor)%>%
         na.omit(nome_agente_executor)
@@ -230,7 +232,7 @@ mod_carga_server <- function(id){
       inicio<-(max(mytbl7$id_disp)+1)
 
       fim<-(inicio+nrow(bs_res)-1)
-      bs_res<-bs_res %>% dplyr::mutate(fonte_dados = dplyr::recode(fonte_dados,
+      bs_res<-bs_res %>% dplyr::mutate(fonte_de_dados = dplyr::recode(fonte_de_dados,
                                                                    "ANEEL"  = 5,
                                                                    "BNDES"  = 6,
                                                                    "FINEP"  = 7,
@@ -262,7 +264,7 @@ mod_carga_server <- function(id){
                                        chamada = NA,
                                        id_disp = inicio:fim
       ) %>%
-        dplyr::rename(id_formnt = fonte_dados,
+        dplyr::rename(id_formnt = fonte_de_dados,
                       mod_finan = modalidade_financiamento,
                       ntz_finan = natureza_agente_financiador)
       #id_prop e id_finan e id_exec medem a mesma coisa
@@ -300,8 +302,8 @@ mod_carga_server <- function(id){
       filesqlite<- input$sqlite
       if (is.null(filesqlite)) return(NULL)
       filename <- filesqlite$datapath
-      con<-DBI::dbConnect(RSQLite::SQLite(),
-                          dbname="myDB")
+      #con<-DBI::dbConnect(RSQLite::SQLite(),
+      #                    dbname="myDB")
 
       #estabelecendo conexão
       con <- DBI::dbConnect(RSQLite::SQLite(),
@@ -311,10 +313,6 @@ mod_carga_server <- function(id){
       mytbl1 <- DBI::dbReadTable(con,"dm_agente_empresa")
       mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
       mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
-
-      inicio<-(max(mytbl1$id_agente)+1)
-
-      fim<-(inicio+nrow(data())-1)
 
       dm_agente_empresa <- data() %>%
         dplyr::filter(categorias %in% c(1.1, 1.2, 1.3, 1.4,
@@ -329,8 +327,12 @@ mod_carga_server <- function(id){
         dplyr::select(nome_agente_executor,
                       nome_agente_financiador,
                       uf_ag_executor,
-                      fonte_dados,
+                      fonte_de_dados,
                       natureza_agente_executor)
+
+      inicio<-(max(mytbl1$id_agente)+1)
+
+      fim<-(inicio+nrow(dm_agente_empresa)-1)
 
       dm_agente_empresa <- dm_agente_empresa %>%
         dplyr::mutate(
@@ -485,7 +487,7 @@ mod_carga_server <- function(id){
                       !titulo_projeto %in% mytbl6$título) %>%
         dplyr::select(id, natureza_agente_financiador,
                       data_assinatura,categorias,nome_agente_executor,
-                      fonte_dados, modalidade_financiamento)
+                      fonte_de_dados, modalidade_financiamento)
 
       outra<- bs_res %>% dplyr::select(nome_agente_executor)%>%
         na.omit(nome_agente_executor)
@@ -506,7 +508,7 @@ mod_carga_server <- function(id){
       inicio<-(max(mytbl7$id_disp)+1)
 
       fim<-(inicio+nrow(bs_res)-1)
-      bs_res<-bs_res %>% dplyr::mutate(fonte_dados = dplyr::recode(fonte_dados,
+      bs_res<-bs_res %>% dplyr::mutate(fonte_de_dados = dplyr::recode(fonte_de_dados,
                                                                    "ANEEL"  = 5,
                                                                    "BNDES"  = 6,
                                                                    "FINEP"  = 7,
@@ -538,7 +540,7 @@ mod_carga_server <- function(id){
                                        chamada = NA,
                                        id_disp = inicio:fim
       ) %>%
-        dplyr::rename(id_formnt = fonte_dados,
+        dplyr::rename(id_formnt = fonte_de_dados,
                       mod_finan = modalidade_financiamento,
                       ntz_finan = natureza_agente_financiador)
       #id_prop e id_finan e id_exec medem a mesma coisa
