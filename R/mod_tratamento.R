@@ -3,6 +3,8 @@
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
+#' @import tibble
+#'
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
@@ -389,6 +391,7 @@ mod_tratamento_server <- function(id){
 
 
     myData <- reactive({
+      browser()
       inFile <- input$file1
       if (is.null(inFile)) return(NULL)
       inFile11 <- input$file11
@@ -800,6 +803,7 @@ mod_tratamento_server <- function(id){
     #ANEEL
 
     i.myData <- reactive({
+      browser()
       i.inFile1 <- input$i.file1
       if (is.null(i.inFile1)) return(NULL)
       i.inFile11 <- input$i.file11
@@ -832,6 +836,7 @@ mod_tratamento_server <- function(id){
         paste(i.myData(), ".csv", sep = "")
       },
       content = function(file) {
+        browser()
         write.csv(i.myData(), file, row.names = FALSE)
       }
     )

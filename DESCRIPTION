@@ -13,7 +13,7 @@ Imports:
     DT,
     ETLEBP,
     glue,
-    golem (>= 0.3.1.9003),
+    golem (>= 0.3.1),
     htmltools,
     magrittr,
     RSQLite,
@@ -21,7 +21,8 @@ Imports:
     shinyBS,
     shinyjs,
     sortable,
-    thinkr
+    thinkr,
+    tibble
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2
