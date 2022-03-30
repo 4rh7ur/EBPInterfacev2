@@ -16,4 +16,5 @@ app_server <- function( input, output, session ) {
   mod_status_server("status_1")
   mod_carga_server("carga_1")
   mod_edicao_server("edicao_1")
+  mod_mod_valid_server("mod_valid_1")
 }

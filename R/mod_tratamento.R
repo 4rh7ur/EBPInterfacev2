@@ -3,8 +3,6 @@
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
-#' @import tibble
-#'
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
@@ -89,14 +87,14 @@ mod_tratamento_ui <- function(id){
                          "text/comma-separated-values,text/plain",
                          ".csv")
             ),
-            fileInput(
-              ns("file22"),
-              "Indique o diretório de anp_agregados_declarados",
-              multiple = FALSE,
-              accept = c("text/csv",
-                         "text/comma-separated-values,text/plain",
-                         ".csv")
-            ),
+            # fileInput(
+            #   ns("file22"),
+            #   "Indique o diretório de anp_agregados_declarados",
+            #   multiple = FALSE,
+            #   accept = c("text/csv",
+            #              "text/comma-separated-values,text/plain",
+            #              ".csv")
+            # ),
 
             downloadButton(ns("download2"), "Executar Tratamento e Baixar Dataset"),
             width = 10
@@ -261,14 +259,14 @@ mod_tratamento_ui <- function(id){
                            "text/comma-separated-values,text/plain",
                            ".csv")
               ),
-              fileInput(
-                ns("i.file22"),
-                "Indique o diretório de anp_agregados_declarados",
-                multiple = FALSE,
-                accept = c("text/csv",
-                           "text/comma-separated-values,text/plain",
-                           ".csv")
-              ),
+              # fileInput(
+              #   ns("i.file22"),
+              #   "Indique o diretório de anp_agregados_declarados",
+              #   multiple = FALSE,
+              #   accept = c("text/csv",
+              #              "text/comma-separated-values,text/plain",
+              #              ".csv")
+              # ),
 
               downloadButton(ns("i.download2"), "Executar Tratamento e Baixar Dataset")
             ),
@@ -391,7 +389,6 @@ mod_tratamento_server <- function(id){
 
 
     myData <- reactive({
-      browser()
       inFile <- input$file1
       if (is.null(inFile)) return(NULL)
       inFile11 <- input$file11
@@ -404,37 +401,41 @@ mod_tratamento_server <- function(id){
       filesqlite<- input$file_sqlite
       if (is.null(filesqlite)) return(NULL)
       fonte <- filesqlite$datapath
-      con <- DBI::dbConnect(RSQLite::SQLite(),
-                            ":memory:",
-                            dbname = fonte)
-      mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
-      mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
-      mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
-      mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
 
-      #inserir categorias IEA do sqlite na base
+      data <- ETLEBP::executa_tratamento_completo(data, fonte)
 
-      #criando um objeto com informações sobre as categorias de IEA
-      consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
 
-      #puxando as descrições das categorias
-      consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
-                            by = c("id_cat2" = "id"))
-      #trazendo as informações de fomentador
-      consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
-                            by = c("id_formnt"= "id_formentador"))
-
-      #trazendo as informações de titulo
-      consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
-
-      #fazendo o merge
-      data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
-                        by = c("titulo_projeto"= "título")) %>% unique()
-      # criar uma coluna que diz se o caso já existe no sqlite
-      data <- data %>%
-        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
-                               "sim",
-                               "não"))
+      # con <- DBI::dbConnect(RSQLite::SQLite(),
+      #                       ":memory:",
+      #                       dbname = fonte)
+      # mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
+      # mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
+      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
+      # mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
+      #
+      # #inserir categorias IEA do sqlite na base
+      #
+      # #criando um objeto com informações sobre as categorias de IEA
+      # consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
+      #
+      # #puxando as descrições das categorias
+      # consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
+      #                       by = c("id_cat2" = "id"))
+      # #trazendo as informações de fomentador
+      # consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
+      #                       by = c("id_formnt"= "id_formentador"))
+      #
+      # #trazendo as informações de titulo
+      # consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
+      #
+      # #fazendo o merge
+      # data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
+      #                   by = c("titulo_projeto"= "título")) %>% unique()
+      # # criar uma coluna que diz se o caso já existe no sqlite
+      # data <- data %>%
+      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
+      #                          "sim",
+      #                          "não"))
 
 
       return(data)
@@ -458,47 +459,52 @@ mod_tratamento_server <- function(id){
     myData2 <- reactive({
       inFile2 <- input$file2
       if (is.null(inFile2)) return(NULL)
-      inFile22 <- input$file22
-      if (is.null(inFile22)) return(NULL)
+      #inFile22 <- input$file22
+      #if (is.null(inFile22)) return(NULL)
+
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
-      data <- ETLEBP::cria_base_intermediaria_anp(origem_processos = inFile2$datapath,
-                                                  origem_enriquecimento = inFile22$datapath)
+
+      data <- ETLEBP::cria_base_intermediaria_anp(origem_processos = inFile2$datapath)
       #fonte <- "data/DB_EIP/EIP_20210415.db"
       filesqlite<- input$file_sqlite
       if (is.null(filesqlite)) return(NULL)
       fonte <- filesqlite$datapath
-      con <- DBI::dbConnect(RSQLite::SQLite(),
-                            ":memory:",
-                            dbname = fonte)
-      mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
-      mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
-      mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
-      mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
+
+      data <- ETLEBP::executa_tratamento_completo(data, fonte)
 
 
-      #inserir categorias IEA do sqlite na base
-
-      #criando um objeto com informações sobre as categorias de IEA
-      consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
-
-      #puxando as descrições das categorias
-      consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
-                                   by = c("id_cat2" = "id"))
-      #trazendo as informações de fomentador
-      consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
-                                   by = c("id_formnt"= "id_formentador"))
-
-      #trazendo as informações de titulo
-      consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
-
-      #fazendo o merge
-      data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
-                               by = c("titulo_projeto"= "título")) %>% unique()
-      # criar uma coluna que diz se o caso já existe no sqlite
-      data <- data %>%
-        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
-                                      "sim",
-                                      "não"))
+      # con <- DBI::dbConnect(RSQLite::SQLite(),
+      #                       ":memory:",
+      #                       dbname = fonte)
+      # mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
+      # mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
+      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
+      # mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
+      #
+      #
+      # #inserir categorias IEA do sqlite na base
+      #
+      # #criando um objeto com informações sobre as categorias de IEA
+      # consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
+      #
+      # #puxando as descrições das categorias
+      # consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
+      #                              by = c("id_cat2" = "id"))
+      # #trazendo as informações de fomentador
+      # consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
+      #                              by = c("id_formnt"= "id_formentador"))
+      #
+      # #trazendo as informações de titulo
+      # consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
+      #
+      # #fazendo o merge
+      # data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
+      #                          by = c("titulo_projeto"= "título")) %>% unique()
+      # # criar uma coluna que diz se o caso já existe no sqlite
+      # data <- data %>%
+      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
+      #                                 "sim",
+      #                                 "não"))
       return(data)
     })
 
@@ -523,36 +529,40 @@ mod_tratamento_server <- function(id){
       if (is.null(filesqlite)) return(NULL)
       fonte <- filesqlite$datapath
 
-      con <- DBI::dbConnect(RSQLite::SQLite(),
-                            ":memory:",
-                            dbname = fonte)
-      mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
-      mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
-      mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
-      mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
 
+      data <- ETLEBP::executa_tratamento_completo(data, fonte)
 
-      #inserir categorias IEA do sqlite na base
-
-      #criando um objeto com informações sobre as categorias de IEA
-      consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
-
-      #puxando as descrições das categorias
-      consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
-                                   by = c("id_cat2" = "id"))
-      #trazendo as informações de fomentador
-      consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
-                                   by = c("id_formnt"= "id_formentador"))
-
-      #trazendo as informações de titulo
-      consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
-
-      #fazendo o merge
-      data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
-                               by = c("titulo_projeto"= "título")) %>% unique()
-      # criar uma coluna que diz se o caso já existe no sqlite
-
-      data <- dplyr::left_join(data, consulta, by = c("id"= "id_projeto")) %>% unique()
+      #
+      # con <- DBI::dbConnect(RSQLite::SQLite(),
+      #                       ":memory:",
+      #                       dbname = fonte)
+      # mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
+      # mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
+      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
+      # mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
+      #
+      #
+      # #inserir categorias IEA do sqlite na base
+      #
+      # #criando um objeto com informações sobre as categorias de IEA
+      # consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
+      #
+      # #puxando as descrições das categorias
+      # consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
+      #                              by = c("id_cat2" = "id"))
+      # #trazendo as informações de fomentador
+      # consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
+      #                              by = c("id_formnt"= "id_formentador"))
+      #
+      # #trazendo as informações de titulo
+      # consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
+      #
+      # #fazendo o merge
+      # data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
+      #                          by = c("titulo_projeto"= "título")) %>% unique()
+      # # criar uma coluna que diz se o caso já existe no sqlite
+      #
+      # data <- dplyr::left_join(data, consulta, by = c("id"= "id_projeto")) %>% unique()
 
       return(data)
     })
@@ -577,38 +587,44 @@ mod_tratamento_server <- function(id){
       filesqlite<- input$file_sqlite
       if (is.null(filesqlite)) return(NULL)
       fonte <- filesqlite$datapath
-      con <- DBI::dbConnect(RSQLite::SQLite(),
-                            ":memory:",
-                            dbname = fonte)
-      mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
-      mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
-      mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
-      mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
 
 
-      #inserir categorias IEA do sqlite na base
 
-      #criando um objeto com informações sobre as categorias de IEA
-      consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
+      data <- ETLEBP::executa_tratamento_completo(data, fonte)
 
-      #puxando as descrições das categorias
-      consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
-                                   by = c("id_cat2" = "id"))
-      #trazendo as informações de fomentador
-      consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
-                                   by = c("id_formnt"= "id_formentador"))
 
-      #trazendo as informações de titulo
-      consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
-
-      #fazendo o merge
-      data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
-                               by = c("titulo_projeto"= "título")) %>% unique()
-      # criar uma coluna que diz se o caso já existe no sqlite
-      data <- data %>%
-        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
-                                      "sim",
-                                      "não"))
+      # con <- DBI::dbConnect(RSQLite::SQLite(),
+      #                       ":memory:",
+      #                       dbname = fonte)
+      # mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
+      # mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
+      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
+      # mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
+      #
+      #
+      # #inserir categorias IEA do sqlite na base
+      #
+      # #criando um objeto com informações sobre as categorias de IEA
+      # consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
+      #
+      # #puxando as descrições das categorias
+      # consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
+      #                              by = c("id_cat2" = "id"))
+      # #trazendo as informações de fomentador
+      # consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
+      #                              by = c("id_formnt"= "id_formentador"))
+      #
+      # #trazendo as informações de titulo
+      # consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
+      #
+      # #fazendo o merge
+      # data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
+      #                          by = c("titulo_projeto"= "título")) %>% unique()
+      # # criar uma coluna que diz se o caso já existe no sqlite
+      # data <- data %>%
+      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
+      #                                 "sim",
+      #                                 "não"))
 
       return(data)
     })
@@ -633,39 +649,43 @@ mod_tratamento_server <- function(id){
       filesqlite<- input$file_sqlite
       if (is.null(filesqlite)) return(NULL)
       fonte <- filesqlite$datapath
-      con <- DBI::dbConnect(RSQLite::SQLite(),
-                            ":memory:",
-                            dbname = fonte)
-      mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
-      mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
-      mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
-      mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
+
+      data <- ETLEBP::executa_tratamento_completo(data, fonte)
 
 
-      #inserir categorias IEA do sqlite na base
-
-      #criando um objeto com informações sobre as categorias de IEA
-      consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
-
-      #puxando as descrições das categorias
-      consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
-                                   by = c("id_cat2" = "id"))
-      #trazendo as informações de fomentador
-      consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
-                                   by = c("id_formnt"= "id_formentador"))
-
-      #trazendo as informações de titulo
-      consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
-
-      #fazendo o merge
-      data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
-                               by = c("titulo_projeto"= "título")) %>% unique()
-      # criar uma coluna que diz se o caso já existe no sqlite
-
-      data <- data %>%
-        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
-                                      "sim",
-                                      "não"))
+      # con <- DBI::dbConnect(RSQLite::SQLite(),
+      #                       ":memory:",
+      #                       dbname = fonte)
+      # mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
+      # mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
+      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
+      # mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
+      #
+      #
+      # #inserir categorias IEA do sqlite na base
+      #
+      # #criando um objeto com informações sobre as categorias de IEA
+      # consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
+      #
+      # #puxando as descrições das categorias
+      # consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
+      #                              by = c("id_cat2" = "id"))
+      # #trazendo as informações de fomentador
+      # consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
+      #                              by = c("id_formnt"= "id_formentador"))
+      #
+      # #trazendo as informações de titulo
+      # consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
+      #
+      # #fazendo o merge
+      # data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
+      #                          by = c("titulo_projeto"= "título")) %>% unique()
+      # # criar uma coluna que diz se o caso já existe no sqlite
+      #
+      # data <- data %>%
+      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
+      #                                 "sim",
+      #                                 "não"))
 
       return(data)
     })
@@ -692,38 +712,42 @@ mod_tratamento_server <- function(id){
       filesqlite<- input$file_sqlite
       if (is.null(filesqlite)) return(NULL)
       fonte <- filesqlite$datapath
-      con <- DBI::dbConnect(RSQLite::SQLite(),
-                            ":memory:",
-                            dbname = fonte)
-      mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
-      mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
-      mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
-      mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
 
 
-      #inserir categorias IEA do sqlite na base
+      data <- ETLEBP::executa_tratamento_completo(data, fonte)
 
-      #criando um objeto com informações sobre as categorias de IEA
-      consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
-
-      #puxando as descrições das categorias
-      consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
-                                   by = c("id_cat2" = "id"))
-      #trazendo as informações de fomentador
-      consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
-                                   by = c("id_formnt"= "id_formentador"))
-
-      #trazendo as informações de titulo
-      consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
-
-      #fazendo o merge
-      data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
-                               by = c("titulo_projeto"= "título")) %>% unique()
-      # criar uma coluna que diz se o caso já existe no sqlite
-      data <- data %>%
-        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
-                                      "sim",
-                                      "não"))
+      # con <- DBI::dbConnect(RSQLite::SQLite(),
+      #                       ":memory:",
+      #                       dbname = fonte)
+      # mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
+      # mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
+      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
+      # mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
+      #
+      #
+      # #inserir categorias IEA do sqlite na base
+      #
+      # #criando um objeto com informações sobre as categorias de IEA
+      # consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
+      #
+      # #puxando as descrições das categorias
+      # consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
+      #                              by = c("id_cat2" = "id"))
+      # #trazendo as informações de fomentador
+      # consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
+      #                              by = c("id_formnt"= "id_formentador"))
+      #
+      # #trazendo as informações de titulo
+      # consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
+      #
+      # #fazendo o merge
+      # data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
+      #                          by = c("titulo_projeto"= "título")) %>% unique()
+      # # criar uma coluna que diz se o caso já existe no sqlite
+      # data <- data %>%
+      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
+      #                                 "sim",
+      #                                 "não"))
 
       return(data)
     })
@@ -753,38 +777,42 @@ mod_tratamento_server <- function(id){
       filesqlite<- input$file_sqlite
       if (is.null(filesqlite)) return(NULL)
       fonte <- filesqlite$datapath
-      con <- DBI::dbConnect(RSQLite::SQLite(),
-                            ":memory:",
-                            dbname = fonte)
-      mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
-      mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
-      mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
-      mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
 
 
-      #inserir categorias IEA do sqlite na base
+      data <- ETLEBP::executa_tratamento_completo(data, fonte)
 
-      #criando um objeto com informações sobre as categorias de IEA
-      consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
-
-      #puxando as descrições das categorias
-      consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
-                                   by = c("id_cat2" = "id"))
-      #trazendo as informações de fomentador
-      consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
-                                   by = c("id_formnt"= "id_formentador"))
-
-      #trazendo as informações de titulo
-      consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
-
-      #fazendo o merge
-      data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
-                               by = c("titulo_projeto"= "título")) %>% unique()
-      # criar uma coluna que diz se o caso já existe no sqlite
-      data <- data %>%
-        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
-                                      "sim",
-                                      "não"))
+      # con <- DBI::dbConnect(RSQLite::SQLite(),
+      #                       ":memory:",
+      #                       dbname = fonte)
+      # mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
+      # mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
+      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
+      # mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
+      #
+      #
+      # #inserir categorias IEA do sqlite na base
+      #
+      # #criando um objeto com informações sobre as categorias de IEA
+      # consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
+      #
+      # #puxando as descrições das categorias
+      # consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
+      #                              by = c("id_cat2" = "id"))
+      # #trazendo as informações de fomentador
+      # consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
+      #                              by = c("id_formnt"= "id_formentador"))
+      #
+      # #trazendo as informações de titulo
+      # consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
+      #
+      # #fazendo o merge
+      # data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
+      #                          by = c("titulo_projeto"= "título")) %>% unique()
+      # # criar uma coluna que diz se o caso já existe no sqlite
+      # data <- data %>%
+      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
+      #                                 "sim",
+      #                                 "não"))
 
       return(data)
     })
@@ -803,7 +831,6 @@ mod_tratamento_server <- function(id){
     #ANEEL
 
     i.myData <- reactive({
-      browser()
       i.inFile1 <- input$i.file1
       if (is.null(i.inFile1)) return(NULL)
       i.inFile11 <- input$i.file11
@@ -816,16 +843,19 @@ mod_tratamento_server <- function(id){
       filesqlite<- input$file_sqlite
       if (is.null(filesqlite)) return(NULL)
       filename <- filesqlite$datapath
-      con <- DBI::dbConnect(RSQLite::SQLite(),
-                       ":memory:",
-                       dbname = filename)
-      #importando tabela com os titulos de projeto
-      mytbl6 <- ETLEBP::dbReadTable(con,"dm_projeto")
 
-        data <- data %>%
-        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
-                                      "sim",
-                                      "não"))
+      data <- ETLEBP::executa_tratamento_incremental(data, filename)
+
+      # con <- DBI::dbConnect(RSQLite::SQLite(),
+      #                  ":memory:",
+      #                  dbname = filename)
+      # #importando tabela com os titulos de projeto
+      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
+      #
+      #   data <- data %>%
+      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
+      #                                 "sim",
+      #                                 "não"))
 
       return(data)
     })
@@ -836,7 +866,6 @@ mod_tratamento_server <- function(id){
         paste(i.myData(), ".csv", sep = "")
       },
       content = function(file) {
-        browser()
         write.csv(i.myData(), file, row.names = FALSE)
       }
     )
@@ -846,27 +875,33 @@ mod_tratamento_server <- function(id){
     i.myData2 <- reactive({
       i.inFile2 <- input$i.file2
       if (is.null(i.inFile2)) return(NULL)
-      i.inFile22 <- input$i.file22
-      if (is.null(i.inFile22)) return(NULL)
+      #i.inFile22 <- input$i.file22
+      #if (is.null(i.inFile22)) return(NULL)
+
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
-      data <- ETLEBP::cria_base_intermediaria_anp(origem_processos = i.inFile2$datapath,
-                                                  origem_enriquecimento = i.inFile22$datapath)
+
+      data <- ETLEBP::cria_base_intermediaria_anp(origem_processos = i.inFile2$datapath#,
+                                                  #origem_enriquecimento = i.inFile22$datapath
+                                                  )
       #Criando dataset com casos novos
       #filename <- "data/DB_EIP/EIP_20210415.db"
       filesqlite<- input$file_sqlite
       if (is.null(filesqlite)) return(NULL)
       filename <- filesqlite$datapath
-      con <- DBI::dbConnect(RSQLite::SQLite(),
-                            ":memory:",
-                            dbname = filename)
-      #importando tabela com os titulos de projeto
-      mytbl6 <- ETLEBP::dbReadTable(con,"dm_projeto")
 
-
-      data <- data %>%
-        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
-                                      "sim",
-                                      "não"))
+      data <- ETLEBP::executa_tratamento_incremental(data, filename)
+      #
+      # con <- DBI::dbConnect(RSQLite::SQLite(),
+      #                       ":memory:",
+      #                       dbname = filename)
+      # #importando tabela com os titulos de projeto
+      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
+      #
+      #
+      # data <- data %>%
+      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
+      #                                 "sim",
+      #                                 "não"))
 
       return(data)
     })
@@ -892,16 +927,19 @@ mod_tratamento_server <- function(id){
       filesqlite<- input$file_sqlite
       if (is.null(filesqlite)) return(NULL)
       filename <- filesqlite$datapath
-      con <- DBI::dbConnect(RSQLite::SQLite(),
-                            ":memory:",
-                            dbname = filename)
-      #importando tabela com os titulos de projeto
-      mytbl6 <- ETLEBP::dbReadTable(con,"dm_projeto")
 
-      data <- data %>%
-        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
-                                      "sim",
-                                      "não"))
+      data <- ETLEBP::executa_tratamento_incremental(data, filename)
+      #
+      # con <- DBI::dbConnect(RSQLite::SQLite(),
+      #                       ":memory:",
+      #                       dbname = filename)
+      # #importando tabela com os titulos de projeto
+      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
+      #
+      # data <- data %>%
+      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
+      #                                 "sim",
+      #                                 "não"))
 
       return(data)
     })
@@ -927,16 +965,19 @@ mod_tratamento_server <- function(id){
       filesqlite<- input$file_sqlite
       if (is.null(filesqlite)) return(NULL)
       filename <- filesqlite$datapath
-      con <- DBI::dbConnect(RSQLite::SQLite(),
-                            ":memory:",
-                            dbname = filename)
-      #importando tabela com os titulos de projeto
-      mytbl6 <- ETLEBP::dbReadTable(con,"dm_projeto")
 
-      data <- data %>%
-        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
-                                      "sim",
-                                      "não"))
+      data <- ETLEBP::executa_tratamento_incremental(data, filename)
+      #
+      # con <- DBI::dbConnect(RSQLite::SQLite(),
+      #                       ":memory:",
+      #                       dbname = filename)
+      # #importando tabela com os titulos de projeto
+      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
+      #
+      # data <- data %>%
+      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
+      #                                 "sim",
+      #                                 "não"))
 
       return(data)
     })
@@ -963,17 +1004,19 @@ mod_tratamento_server <- function(id){
       if (is.null(filesqlite)) return(NULL)
       filename <- filesqlite$datapath
 
-      con <- DBI::dbConnect(RSQLite::SQLite(),
-                            ":memory:",
-                            dbname = filename)
-      #importando tabela com os titulos de projeto
-      mytbl6 <- ETLEBP::dbReadTable(con,"dm_projeto")
-
-
-      data <- data %>%
-        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
-                                      "sim",
-                                      "não"))
+      data <- ETLEBP::executa_tratamento_incremental(data, filename)
+      #
+      # con <- DBI::dbConnect(RSQLite::SQLite(),
+      #                       ":memory:",
+      #                       dbname = filename)
+      # #importando tabela com os titulos de projeto
+      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
+      #
+      #
+      # data <- data %>%
+      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
+      #                                 "sim",
+      #                                 "não"))
       return(data)
     })
 
@@ -1000,16 +1043,19 @@ mod_tratamento_server <- function(id){
       filesqlite<- input$file_sqlite
       if (is.null(filesqlite)) return(NULL)
       filename <- filesqlite$datapath
-      con <- DBI::dbConnect(RSQLite::SQLite(),
-                            ":memory:",
-                            dbname = filename)
-      #importando tabela com os titulos de projeto
-      mytbl6 <- ETLEBP::dbReadTable(con,"dm_projeto")
 
-      data <- data %>%
-        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
-                                      "sim",
-                                      "não"))
+      data <- ETLEBP::executa_tratamento_incremental(data, filename)
+
+      # con <- DBI::dbConnect(RSQLite::SQLite(),
+      #                       ":memory:",
+      #                       dbname = filename)
+      # #importando tabela com os titulos de projeto
+      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
+      #
+      # data <- data %>%
+      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
+      #                                 "sim",
+      #                                 "não"))
 
       return(data)
     })
@@ -1041,16 +1087,19 @@ mod_tratamento_server <- function(id){
       filesqlite<- input$file_sqlite
       if (is.null(filesqlite)) return(NULL)
       filename <- filesqlite$datapath
-      con <- DBI::dbConnect(RSQLite::SQLite(),
-                            ":memory:",
-                            dbname = filename)
-      #importando tabela com os titulos de projeto
-      mytbl6 <- ETLEBP::dbReadTable(con,"dm_projeto")
 
-      data <- data %>%
-        dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$título,
-                                      "sim",
-                                      "não"))
+      data <- ETLEBP::executa_tratamento_incremental(data, filename)
+      #
+      # con <- DBI::dbConnect(RSQLite::SQLite(),
+      #                       ":memory:",
+      #                       dbname = filename)
+      # #importando tabela com os titulos de projeto
+      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
+      #
+      # data <- data %>%
+      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
+      #                                 "sim",
+      #                                 "não"))
 
       return(data)
     })

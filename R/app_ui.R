@@ -18,6 +18,7 @@ app_ui <- function(request) {
                        #DataEditR::dataOutputUI("tab"),
                        #DataEditR::dataEditUI("edit-1")
                        ),
+              tabPanel("Estação de Validação", mod_mod_valid_ui("mod_valid_1")),
               tabPanel("Estação de Carga", mod_carga_ui("carga_1"))
     )#tabsetPanel
 
