@@ -54,7 +54,7 @@ mod_carga_server <- function(id){
 
 
 
-    observeEvent(input$carga1, { executa_carga_completa(data(), filename)
+    observeEvent(input$carga1, { ETLEBP::executa_carga_completa(data(), filename)
 
 
     })
