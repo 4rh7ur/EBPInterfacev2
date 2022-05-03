@@ -58,14 +58,14 @@ mod_mod_valid_server <- function(id){
       inFile <- input$dataset1
       if (is.null(inFile)) return(NULL)
       data_enriq <- readr::read_csv(inFile$datapath, locale = readr::locale(encoding = "latin1"))
-
+      data_enriq <- data_enriq %>% dplyr::mutate(id = as.character(id))
 
       #dataset com alterações
 
       inFile2 <- input$dataset2
       if (is.null(inFile2)) return(NULL)
       data_inser <- readr::read_csv(inFile2$datapath, locale = readr::locale(encoding = "latin1"))
-
+      data_inser <- data_inser %>% dplyr::mutate(id = as.character(id))
 
       data <- dplyr::left_join(data_enriq, data_inser,
                                by = c("id" = "id"),
