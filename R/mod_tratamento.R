@@ -454,7 +454,7 @@ mod_tratamento_server <- function(id){
     #ANP
 
     server <- function(input, output, session) {
-      addTooltip(id="anp.btn",title="Hello! This is a hover pop-up. You'll have to click to see the next one.")
+      shinyBS::addTooltip(id="anp.btn",title="Hello! This is a hover pop-up. You'll have to click to see the next one.")
     }
     myData2 <- reactive({
       inFile2 <- input$file2

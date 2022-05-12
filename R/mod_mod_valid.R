@@ -73,7 +73,7 @@ mod_mod_valid_server <- function(id){
                       unique()
 
       data <- data %>%
-        dplyr::select(-contains("_original"))%>%
+        dplyr::select(-dplyr::contains("_original"))%>%
         dplyr::rename_at(dplyr::vars(dplyr::contains("_inserido")), list(~stringr::str_remove(., "_inserido")))
 
       return(data)

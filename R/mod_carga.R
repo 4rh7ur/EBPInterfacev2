@@ -35,7 +35,7 @@ mod_carga_server <- function(id){
     myData <- reactive({
       inFile <- input$carga_final
       if (is.null(inFile)) return(NULL)
-      data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
+      data <- data.table::fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
 
       return(data)
     })

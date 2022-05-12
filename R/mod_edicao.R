@@ -140,12 +140,12 @@ observeEvent(input$trava,{
     observeEvent(input$cut, {
       if (values$cut) {
         values$cut <- FALSE
-        updateButton(session, "cut", NULL, block = FALSE,
+        shinyBS::updateButton(session, "cut", NULL, block = FALSE,
                      style = "danger")
       }
       else {
         values$cut <- TRUE
-        updateButton(session, "cut", NULL, block = FALSE,
+        shinyBS::updateButton(session, "cut", NULL, block = FALSE,
                      style = "success")
       }
     })
@@ -153,7 +153,7 @@ observeEvent(input$trava,{
       stopApp(NULL)
     })
     observeEvent(input$done, {
-      if (hide == TRUE) {
+      if (shinyjs::hide == TRUE) {
         stopApp(values$data_active)
       }
       else {
