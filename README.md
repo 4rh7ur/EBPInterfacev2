@@ -1,44 +1,25 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ETLEBP
+# EBPInterface
 
-Bem-vindos ao pacote ETLEBP. O pacote executa as etapas de extração,
-tratamento e carga da plataforma INOVA-E.
+Bem-vindos ao repositório github do pacote EBPInterface. O pacote foi
+desenvolvido como o objetivo de permitir que não usuário de R execute as
+etapas de Extração, Tratamento, Validação das Categorias de IEA e Carga
+na plataforma Inova-E por uma interface point and click, permitindo
+assim que não usuários de R executem o processo.
 
-``` r
-devtools::install_github("BaruqueRodrigues/ETLEBP")
-```
-
-O processo de ETL começa com a função com a criação das bases
-intermediárias. Cada fonte de dados tem uma função especifica que
-executa os tratamentos particulares e necessários a cada fonte. No caso
-da fonte ANEEL, que usaremos como exemplo para fins didáticos, só é
-necessário executar a seguinte função
+O download do pacote é feito via github
 
 ``` r
-base_intermediaria_aneel <- cria_base_intermediaria_aneel()
+devtools::install_github("BaruqueRodrigues/EBPInterface")
 ```
 
-Em seguida decidimos qual tipo de tratamento iremos aplicar, para fins
-didáticos iremos fazer uma carga intermediária, onde o objetivo da carga
-é inserir apenas novos casos
+Para abrir a interface execute a função abaixo
 
 ``` r
-base_intermediaria_aneel <- executa_tratamento_incremental(base_intermediaria_aneel, diretorio_sqlite)
+EBPInterface::run_app()
 ```
 
-Após executar o tratamento para a carga incremental a base deve ter as
-categorias de IEA avaliadas por um analista. Essa etapa é feita no
-pacote EBPInterface, que produz um dataset validado que enriquecerá o
-dataset intermediario.
-
-``` r
-base_validada_aneel <- valida_dataset(base_intermediaria_aneel, dataset_validado_aneel)
-```
-
-Em seguida a base está pronta para a carga.
-
-``` r
-executa_carga_incremental(base_validada_aneel, diretorio_sqlite)
-```
+Caso você seja um usuário de R e não tenha interesse na interface acesse
+a página do pacote ETLEBP aqui no github
