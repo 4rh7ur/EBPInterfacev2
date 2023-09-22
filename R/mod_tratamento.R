@@ -16,7 +16,7 @@ mod_tratamento_ui <- function(id){
         "Selecione o Tipo de Carga",
         choices = c("Carga Completa", "Carga Incremental")
       ),
-      fileInput(ns("file_sqlite"), "Indique o diretório do SQLite"),
+      fileInput(ns("file_sqlite"), "Indique o diretório da base SQLite"),
       width = 10
     )),
 
@@ -49,15 +49,7 @@ mod_tratamento_ui <- function(id){
             ),
             fileInput(
               ns("file1"),
-              "Indique o diretório de PD Busca Textual",
-              multiple = FALSE,
-              accept = c("text/csv",
-                         "text/comma-separated-values,text/plain",
-                         ".csv")
-            ),
-            fileInput(
-              ns("file11"),
-              "Indique o diretório de 5.PD RF EQUIPE",
+              "Indique o diretório da base primária da ANEEL",
               multiple = FALSE,
               accept = c("text/csv",
                          "text/comma-separated-values,text/plain",
@@ -214,23 +206,15 @@ mod_tratamento_ui <- function(id){
           fluidRow(
             conditionalPanel(
               condition = "input.id2 == 'Fonte ANEEL'",
-              tags$div(style = "display:inline-block",
-                       title ="É importante selecionar duas bases para a atualizaçãocompleta dos dados.
-                       A base PD Busca Textual contém todos projetos de P&D com as informações de dispêndio e descrição dos projetos e a base RELATORIO PD RF ENTIDADES adiciona informação sobre os agentes executores dos projetos.",
-                       actionButton("i.btn", "",
-                                    icon = icon("question", lib = "font-awesome"))
-              ),
+              # tags$div(style = "display:inline-block",
+              #          title ="É importante selecionar duas bases para a atualizaçãocompleta dos dados.
+              #          A base PD Busca Textual contém todos projetos de P&D com as informações de dispêndio e descrição dos projetos e a base RELATORIO PD RF ENTIDADES adiciona informação sobre os agentes executores dos projetos.",
+              #          actionButton("i.btn", "",
+              #                       icon = icon("question", lib = "font-awesome"))
+              # ),
               fileInput(
                 ns("i.file1"),
-                "2.Indique o diretório de PD Busca Textual",
-                multiple = FALSE,
-                accept = c("text/csv",
-                           "text/comma-separated-values,text/plain",
-                           ".csv")
-              ),
-              fileInput(
-                ns("i.file11"),
-                "Indique o diretório de 5.PD RF EQUIPE",
+                "3.Indique o diretório da base primária da ANEEL",
                 multiple = FALSE,
                 accept = c("text/csv",
                            "text/comma-separated-values,text/plain",
@@ -391,11 +375,8 @@ mod_tratamento_server <- function(id){
     myData <- reactive({
       inFile <- input$file1
       if (is.null(inFile)) return(NULL)
-      inFile11 <- input$file11
-      if (is.null(inFile11)) return(NULL)
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
-      data <- ETLEBP::cria_base_intermediaria_aneel(origem_processos = inFile$datapath,
-                                                    origem_equipes = inFile11$datapath)
+      data <- ETLEBP::cria_base_intermediaria_aneel(origem_processos = inFile$datapath)
 
       #fonte <- "data/DB_EIP/EIP_20210415.db"
       filesqlite<- input$file_sqlite
@@ -833,11 +814,9 @@ mod_tratamento_server <- function(id){
     i.myData <- reactive({
       i.inFile1 <- input$i.file1
       if (is.null(i.inFile1)) return(NULL)
-      i.inFile11 <- input$i.file11
-      if (is.null(i.inFile11)) return(NULL)
+
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
-      data <- ETLEBP::cria_base_intermediaria_aneel(origem_processos = i.inFile1$datapath,
-                                                    origem_equipes = i.inFile11$datapath)
+      data <- ETLEBP::cria_base_intermediaria_aneel(origem_processos = i.inFile1$datapath)
       #Criando dataset com casos novos
       #filename <- "data/DB_EIP/EIP_20210415.db"
       filesqlite<- input$file_sqlite
