@@ -13,7 +13,7 @@ mod_tratamento_ui <- function(id){
     fluidRow(column(
       selectInput(
         "id0",
-        "Selecione o Tipo de Carga",
+        "1. Selecione o Tipo de Carga",
         choices = c("Carga Completa", "Carga Incremental")
       ),
       fileInput(ns("file_sqlite"), "Indique o diretório da base SQLite"),
@@ -26,7 +26,7 @@ mod_tratamento_ui <- function(id){
         condition = "input.id0 == 'Carga Completa'",
         selectInput(
           "id1",
-          "1. Selecione a Fonte dos Dados que Receberá o Tratamento",
+          "2. Selecione a Fonte dos Dados que Receberá o Tratamento",
           choices = c(
             "Fonte ANEEL",
             "Fonte ANP",
@@ -34,22 +34,15 @@ mod_tratamento_ui <- function(id){
             "Fonte CNEN",
             "Fonte CNPQ",
             "Fonte FAPESP",
-            "Fonte FINEP"#,
-            #"Fonte FNDCT"
+            "Fonte FINEP"
           )
         ),
         fluidRow(
           conditionalPanel(
             condition = "input.id1 == 'Fonte ANEEL'",
-            tags$div(style = "display:inline-block",
-                     title ="É importante selecionar duas bases para a atualização completa dos dados.
-                     A base PD Busca Textual contém todos projetos de P&D com as informações de dispêndio e descrição dos projetos e a base RELATORIO PD RF ENTIDADES adiciona informação sobre os agentes executores dos projetos.",
-                     actionButton("btn", "",
-                                  icon = icon("question", lib = "font-awesome"))
-            ),
             fileInput(
               ns("file1"),
-              "Indique o diretório da base primária da ANEEL",
+              "3. Indique o diretório da base primária da ANEEL",
               multiple = FALSE,
               accept = c("text/csv",
                          "text/comma-separated-values,text/plain",
@@ -62,31 +55,14 @@ mod_tratamento_ui <- function(id){
 
           conditionalPanel(
             condition = "input.id1 == 'Fonte ANP'",
-
-            tags$div(style = "display:inline-block",
-                     title ="
-                     É importante selecionar duas bases para a atualização completa dos dados.
-                     A base de dados agregados contém a informação dos dispêndios declarados pelas empresas até 2018 e a base rt3 possui informações dos projetos a partir do ano de 2017.",
-                     actionButton("anp.btn", "",
-                     icon = icon("question", lib = "font-awesome"))
-                     ),
-
             fileInput(
               ns("file2"),
-              "Indique o diretório de projetos-rt-3-2015",
+              "3. Indique o diretório da base primária da ANP",
               multiple = FALSE,
               accept = c("text/csv",
                          "text/comma-separated-values,text/plain",
                          ".csv")
             ),
-            # fileInput(
-            #   ns("file22"),
-            #   "Indique o diretório de anp_agregados_declarados",
-            #   multiple = FALSE,
-            #   accept = c("text/csv",
-            #              "text/comma-separated-values,text/plain",
-            #              ".csv")
-            # ),
 
             downloadButton(ns("download2"), "Executar Tratamento e Baixar Dataset"),
             width = 10
@@ -96,7 +72,7 @@ mod_tratamento_ui <- function(id){
             condition = "input.id1 == 'Fonte BNDES'",
             fileInput(
               ns("file3"),
-              "Indique o diretório de naoautomaticas",
+              "3. Indique o diretório da base primária do BNDES",
               multiple = FALSE,
               accept = c("text/csv",
                          "text/comma-separated-values,text/plain",
@@ -112,7 +88,7 @@ mod_tratamento_ui <- function(id){
             condition = "input.id1 == 'Fonte CNEN'",
             fileInput(
               ns("file4"),
-              "Indique o diretório de Projeto CNEN_Plataforma Inova-E",
+              "3. Indique o diretório da base primária da CNEN",
               multiple = FALSE,
               accept = c("text/csv",
                          "text/comma-separated-values,text/plain",
@@ -128,11 +104,12 @@ mod_tratamento_ui <- function(id){
             condition = "input.id1 == 'Fonte FINEP'",
             fileInput(
               ns("file5"),
-              "Indique o diretório de 14_09_2021_Liberacoes",
+              "3. Indique o diretório da base primária da FINEP",
               multiple = FALSE,
               accept = c("text/csv",
                          "text/comma-separated-values,text/plain",
-                         ".csv")
+                         ".csv",
+                         ".ods")
             ),
 
             downloadButton(ns("download5"), "Executar Tratamento e Baixar Dataset"),
@@ -142,11 +119,12 @@ mod_tratamento_ui <- function(id){
             condition = "input.id1 == 'Fonte FAPESP'",
             fileInput(
               ns("file6"),
-              "Indique o diretório de PROJETOS FAPESP SELECIONADOS INOVA-E - VALORES - 13 dez 2021",
+              "3. Indique o diretório da base primária da FAPESP",
               multiple = FALSE,
               accept = c("text/csv",
                          "text/comma-separated-values,text/plain",
-                         ".csv")
+                         ".csv",
+                         ".xlsx")
             ),
 
             downloadButton(ns("download6"), "Executar Tratamento e Baixar Dataset"),
@@ -206,15 +184,9 @@ mod_tratamento_ui <- function(id){
           fluidRow(
             conditionalPanel(
               condition = "input.id2 == 'Fonte ANEEL'",
-              # tags$div(style = "display:inline-block",
-              #          title ="É importante selecionar duas bases para a atualizaçãocompleta dos dados.
-              #          A base PD Busca Textual contém todos projetos de P&D com as informações de dispêndio e descrição dos projetos e a base RELATORIO PD RF ENTIDADES adiciona informação sobre os agentes executores dos projetos.",
-              #          actionButton("i.btn", "",
-              #                       icon = icon("question", lib = "font-awesome"))
-              # ),
               fileInput(
                 ns("i.file1"),
-                "3.Indique o diretório da base primária da ANEEL",
+                "3. Indique o diretório da base primária da ANEEL",
                 multiple = FALSE,
                 accept = c("text/csv",
                            "text/comma-separated-values,text/plain",
@@ -228,16 +200,9 @@ mod_tratamento_ui <- function(id){
 
             conditionalPanel(
               condition = "input.id2 == 'Fonte ANP'",
-              tags$div(style = "display:inline-block",
-                       title ="
-                     É importante selecionar duas bases para a atualização completa dos dados.
-                     A base de dados agregados contém a informação dos dispêndios declarados pelas empresas até 2018 e a base rt3 possui informações dos projetos a partir do ano de 2017.",
-                       actionButton("i.anp.btn", "",
-                                    icon = icon("question", lib = "font-awesome"))
-              ),
               fileInput(
                 ns("i.file2"),
-                "Indique o diretório de projetos-rt-3-2015",
+                "3. Indique o diretório da base primária da ANP",
                 multiple = FALSE,
                 accept = c("text/csv",
                            "text/comma-separated-values,text/plain",
@@ -259,7 +224,7 @@ mod_tratamento_ui <- function(id){
               condition = "input.id2 == 'Fonte BNDES'",
               fileInput(
                 ns("i.file3"),
-                "Indique o diretório de naoautomaticas",
+                "3. Indique o diretório da base primária do BNDES",
                 multiple = FALSE,
                 accept = c("text/csv",
                            "text/comma-separated-values,text/plain",
@@ -276,7 +241,7 @@ mod_tratamento_ui <- function(id){
               condition = "input.id2 == 'Fonte CNEN'",
               fileInput(
                 ns("i.file4"),
-                "Indique o diretório de Projeto CNEN_Plataforma Inova-E",
+                "3. Indique o diretório base primária da CNEN",
                 multiple = FALSE,
                 accept = c("text/csv",
                            "text/comma-separated-values,text/plain",
@@ -293,11 +258,12 @@ mod_tratamento_ui <- function(id){
               condition = "input.id2 == 'Fonte FINEP'",
               fileInput(
                 ns("i.file5"),
-                "Indique o diretório de 14_09_2021_Liberacoes",
+                "3. Indique o diretório da base primária da FINEP",
                 multiple = FALSE,
                 accept = c("text/csv",
                            "text/comma-separated-values,text/plain",
-                           ".csv")
+                           ".csv",
+                           "ods")
               ),
 
               downloadButton(ns("i.download5"), "Executar Tratamento e Baixar Dataset"),
@@ -307,11 +273,12 @@ mod_tratamento_ui <- function(id){
               condition = "input.id2 == 'Fonte FAPESP'",
               fileInput(
                 ns("i.file6"),
-                "Indique o diretório de PROJETOS FAPESP SELECIONADOS INOVA-E - VALORES - 13 dez 2021",
+                "3. Indique o diretório da base primária da FAPESP",
                 multiple = FALSE,
                 accept = c("text/csv",
                            "text/comma-separated-values,text/plain",
-                           ".csv")
+                           ".csv",
+                           ".xlsx")
               ),
 
               downloadButton(ns("i.download6"), "Executar Tratamento e Baixar Dataset"),
@@ -385,47 +352,13 @@ mod_tratamento_server <- function(id){
 
       data <- ETLEBP::executa_tratamento_completo(data, fonte)
 
-
-      # con <- DBI::dbConnect(RSQLite::SQLite(),
-      #                       ":memory:",
-      #                       dbname = fonte)
-      # mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
-      # mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
-      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
-      # mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
-      #
-      # #inserir categorias IEA do sqlite na base
-      #
-      # #criando um objeto com informações sobre as categorias de IEA
-      # consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
-      #
-      # #puxando as descrições das categorias
-      # consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
-      #                       by = c("id_cat2" = "id"))
-      # #trazendo as informações de fomentador
-      # consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
-      #                       by = c("id_formnt"= "id_formentador"))
-      #
-      # #trazendo as informações de titulo
-      # consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
-      #
-      # #fazendo o merge
-      # data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
-      #                   by = c("titulo_projeto"= "título")) %>% unique()
-      # # criar uma coluna que diz se o caso já existe no sqlite
-      # data <- data %>%
-      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
-      #                          "sim",
-      #                          "não"))
-
-
       return(data)
     })
 
     #Fazer o Download
     output$download <- downloadHandler(
       filename = function() {
-        paste(myData(), ".csv", sep = "")
+        paste("aneel_interm", ".csv", sep = "")
       },
       content = function(file) {
         write.csv(myData(), file, row.names = FALSE)
@@ -440,10 +373,6 @@ mod_tratamento_server <- function(id){
     myData2 <- reactive({
       inFile2 <- input$file2
       if (is.null(inFile2)) return(NULL)
-      #inFile22 <- input$file22
-      #if (is.null(inFile22)) return(NULL)
-
-      #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
 
       data <- ETLEBP::cria_base_intermediaria_anp(origem_processos = inFile2$datapath)
       #fonte <- "data/DB_EIP/EIP_20210415.db"
@@ -453,46 +382,13 @@ mod_tratamento_server <- function(id){
 
       data <- ETLEBP::executa_tratamento_completo(data, fonte)
 
-
-      # con <- DBI::dbConnect(RSQLite::SQLite(),
-      #                       ":memory:",
-      #                       dbname = fonte)
-      # mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
-      # mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
-      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
-      # mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
-      #
-      #
-      # #inserir categorias IEA do sqlite na base
-      #
-      # #criando um objeto com informações sobre as categorias de IEA
-      # consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
-      #
-      # #puxando as descrições das categorias
-      # consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
-      #                              by = c("id_cat2" = "id"))
-      # #trazendo as informações de fomentador
-      # consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
-      #                              by = c("id_formnt"= "id_formentador"))
-      #
-      # #trazendo as informações de titulo
-      # consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
-      #
-      # #fazendo o merge
-      # data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
-      #                          by = c("titulo_projeto"= "título")) %>% unique()
-      # # criar uma coluna que diz se o caso já existe no sqlite
-      # data <- data %>%
-      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
-      #                                 "sim",
-      #                                 "não"))
       return(data)
     })
 
     #Fazer o Download
     output$download2 <- downloadHandler(
       filename = function() {
-        paste(myData2(), ".csv", sep = "")
+        paste("anp_interm", ".csv", sep = "")
       },
       content = function(file) {
         write.csv(myData2(), file, row.names = FALSE)
@@ -513,45 +409,13 @@ mod_tratamento_server <- function(id){
 
       data <- ETLEBP::executa_tratamento_completo(data, fonte)
 
-      #
-      # con <- DBI::dbConnect(RSQLite::SQLite(),
-      #                       ":memory:",
-      #                       dbname = fonte)
-      # mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
-      # mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
-      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
-      # mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
-      #
-      #
-      # #inserir categorias IEA do sqlite na base
-      #
-      # #criando um objeto com informações sobre as categorias de IEA
-      # consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
-      #
-      # #puxando as descrições das categorias
-      # consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
-      #                              by = c("id_cat2" = "id"))
-      # #trazendo as informações de fomentador
-      # consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
-      #                              by = c("id_formnt"= "id_formentador"))
-      #
-      # #trazendo as informações de titulo
-      # consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
-      #
-      # #fazendo o merge
-      # data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
-      #                          by = c("titulo_projeto"= "título")) %>% unique()
-      # # criar uma coluna que diz se o caso já existe no sqlite
-      #
-      # data <- dplyr::left_join(data, consulta, by = c("id"= "id_projeto")) %>% unique()
-
       return(data)
     })
 
     #Fazer o Download
     output$download3 <- downloadHandler(
       filename = function() {
-        paste(myData3(), ".csv", sep = "")
+        paste("bndes_interm", ".csv", sep = "")
       },
       content = function(file) {
         write.csv(myData3(), file, row.names = FALSE)
@@ -569,43 +433,7 @@ mod_tratamento_server <- function(id){
       if (is.null(filesqlite)) return(NULL)
       fonte <- filesqlite$datapath
 
-
-
       data <- ETLEBP::executa_tratamento_completo(data, fonte)
-
-
-      # con <- DBI::dbConnect(RSQLite::SQLite(),
-      #                       ":memory:",
-      #                       dbname = fonte)
-      # mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
-      # mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
-      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
-      # mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
-      #
-      #
-      # #inserir categorias IEA do sqlite na base
-      #
-      # #criando um objeto com informações sobre as categorias de IEA
-      # consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
-      #
-      # #puxando as descrições das categorias
-      # consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
-      #                              by = c("id_cat2" = "id"))
-      # #trazendo as informações de fomentador
-      # consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
-      #                              by = c("id_formnt"= "id_formentador"))
-      #
-      # #trazendo as informações de titulo
-      # consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
-      #
-      # #fazendo o merge
-      # data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
-      #                          by = c("titulo_projeto"= "título")) %>% unique()
-      # # criar uma coluna que diz se o caso já existe no sqlite
-      # data <- data %>%
-      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
-      #                                 "sim",
-      #                                 "não"))
 
       return(data)
     })
@@ -613,7 +441,7 @@ mod_tratamento_server <- function(id){
     #Fazer o Download
     output$download4 <- downloadHandler(
       filename = function() {
-        paste(myData4(), ".csv", sep = "")
+        paste("cnen_interm", ".csv", sep = "")
       },
       content = function(file) {
         write.csv(myData4(), file, row.names = FALSE)
@@ -633,48 +461,13 @@ mod_tratamento_server <- function(id){
 
       data <- ETLEBP::executa_tratamento_completo(data, fonte)
 
-
-      # con <- DBI::dbConnect(RSQLite::SQLite(),
-      #                       ":memory:",
-      #                       dbname = fonte)
-      # mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
-      # mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
-      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
-      # mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
-      #
-      #
-      # #inserir categorias IEA do sqlite na base
-      #
-      # #criando um objeto com informações sobre as categorias de IEA
-      # consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
-      #
-      # #puxando as descrições das categorias
-      # consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
-      #                              by = c("id_cat2" = "id"))
-      # #trazendo as informações de fomentador
-      # consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
-      #                              by = c("id_formnt"= "id_formentador"))
-      #
-      # #trazendo as informações de titulo
-      # consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
-      #
-      # #fazendo o merge
-      # data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
-      #                          by = c("titulo_projeto"= "título")) %>% unique()
-      # # criar uma coluna que diz se o caso já existe no sqlite
-      #
-      # data <- data %>%
-      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
-      #                                 "sim",
-      #                                 "não"))
-
       return(data)
     })
 
     #Fazer o Download
     output$download5 <- downloadHandler(
       filename = function() {
-        paste(myData5(), ".csv", sep = "")
+        paste("finep_interm", ".csv", sep = "")
       },
       content = function(file) {
         write.csv(myData5(), file, row.names = FALSE)
@@ -687,48 +480,14 @@ mod_tratamento_server <- function(id){
       inFile6 <- input$file6
       if (is.null(inFile6)) return(NULL)
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
-      data <- ETLEBP::cria_base_intermediaria_finep(origem_processos = inFile6$datapath)
+      data <- ETLEBP::cria_base_intermediaria_fapesp(origem_processos = inFile6$datapath)
 
       #fonte <- "data/DB_EIP/EIP_20210415.db"
       filesqlite<- input$file_sqlite
       if (is.null(filesqlite)) return(NULL)
       fonte <- filesqlite$datapath
 
-
       data <- ETLEBP::executa_tratamento_completo(data, fonte)
-
-      # con <- DBI::dbConnect(RSQLite::SQLite(),
-      #                       ":memory:",
-      #                       dbname = fonte)
-      # mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
-      # mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
-      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
-      # mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
-      #
-      #
-      # #inserir categorias IEA do sqlite na base
-      #
-      # #criando um objeto com informações sobre as categorias de IEA
-      # consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
-      #
-      # #puxando as descrições das categorias
-      # consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
-      #                              by = c("id_cat2" = "id"))
-      # #trazendo as informações de fomentador
-      # consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
-      #                              by = c("id_formnt"= "id_formentador"))
-      #
-      # #trazendo as informações de titulo
-      # consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
-      #
-      # #fazendo o merge
-      # data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
-      #                          by = c("titulo_projeto"= "título")) %>% unique()
-      # # criar uma coluna que diz se o caso já existe no sqlite
-      # data <- data %>%
-      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
-      #                                 "sim",
-      #                                 "não"))
 
       return(data)
     })
@@ -736,7 +495,7 @@ mod_tratamento_server <- function(id){
     #Fazer o Download
     output$download6 <- downloadHandler(
       filename = function() {
-        paste(myData6(), ".csv", sep = "")
+        paste("fapesp_interm", ".csv", sep = "")
       },
       content = function(file) {
         write.csv(myData6(), file, row.names = FALSE)
@@ -825,24 +584,13 @@ mod_tratamento_server <- function(id){
 
       data <- ETLEBP::executa_tratamento_incremental(data, filename)
 
-      # con <- DBI::dbConnect(RSQLite::SQLite(),
-      #                  ":memory:",
-      #                  dbname = filename)
-      # #importando tabela com os titulos de projeto
-      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
-      #
-      #   data <- data %>%
-      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
-      #                                 "sim",
-      #                                 "não"))
-
       return(data)
     })
 
     #Fazer o Download
     output$i.download <- downloadHandler(
       filename = function() {
-        paste(i.myData(), ".csv", sep = "")
+        paste("aneel_interm", ".csv", sep = "")
       },
       content = function(file) {
         write.csv(i.myData(), file, row.names = FALSE)
@@ -869,18 +617,6 @@ mod_tratamento_server <- function(id){
       filename <- filesqlite$datapath
 
       data <- ETLEBP::executa_tratamento_incremental(data, filename)
-      #
-      # con <- DBI::dbConnect(RSQLite::SQLite(),
-      #                       ":memory:",
-      #                       dbname = filename)
-      # #importando tabela com os titulos de projeto
-      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
-      #
-      #
-      # data <- data %>%
-      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
-      #                                 "sim",
-      #                                 "não"))
 
       return(data)
     })
@@ -888,7 +624,7 @@ mod_tratamento_server <- function(id){
     #Fazer o Download
     output$i.download2 <- downloadHandler(
       filename = function() {
-        paste(i.myData2(), ".csv", sep = "")
+        paste("anp_interm", ".csv", sep = "")
       },
       content = function(file) {
         write.csv(i.myData2(), file, row.names = FALSE)
@@ -908,17 +644,6 @@ mod_tratamento_server <- function(id){
       filename <- filesqlite$datapath
 
       data <- ETLEBP::executa_tratamento_incremental(data, filename)
-      #
-      # con <- DBI::dbConnect(RSQLite::SQLite(),
-      #                       ":memory:",
-      #                       dbname = filename)
-      # #importando tabela com os titulos de projeto
-      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
-      #
-      # data <- data %>%
-      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
-      #                                 "sim",
-      #                                 "não"))
 
       return(data)
     })
@@ -926,7 +651,7 @@ mod_tratamento_server <- function(id){
     #Fazer o Download
     output$i.download3 <- downloadHandler(
       filename = function() {
-        paste(i.myData3(), ".csv", sep = "")
+        paste("bndes_interm", ".csv", sep = "")
       },
       content = function(file) {
         write.csv(i.myData3(), file, row.names = FALSE)
@@ -946,17 +671,6 @@ mod_tratamento_server <- function(id){
       filename <- filesqlite$datapath
 
       data <- ETLEBP::executa_tratamento_incremental(data, filename)
-      #
-      # con <- DBI::dbConnect(RSQLite::SQLite(),
-      #                       ":memory:",
-      #                       dbname = filename)
-      # #importando tabela com os titulos de projeto
-      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
-      #
-      # data <- data %>%
-      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
-      #                                 "sim",
-      #                                 "não"))
 
       return(data)
     })
@@ -984,25 +698,14 @@ mod_tratamento_server <- function(id){
       filename <- filesqlite$datapath
 
       data <- ETLEBP::executa_tratamento_incremental(data, filename)
-      #
-      # con <- DBI::dbConnect(RSQLite::SQLite(),
-      #                       ":memory:",
-      #                       dbname = filename)
-      # #importando tabela com os titulos de projeto
-      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
-      #
-      #
-      # data <- data %>%
-      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
-      #                                 "sim",
-      #                                 "não"))
+
       return(data)
     })
 
     #Fazer o Download
     output$i.download5 <- downloadHandler(
       filename = function() {
-        paste(i.myData5(), ".csv", sep = "")
+        paste("finep_interm", ".csv", sep = "")
       },
       content = function(file) {
         write.csv(i.myData5(), file, row.names = FALSE)
@@ -1015,7 +718,7 @@ mod_tratamento_server <- function(id){
       i.inFile6 <- input$i.file6
       if (is.null(i.inFile6)) return(NULL)
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
-      data <- ETLEBP::cria_base_intermediaria_finep(origem_processos = i.inFile6$datapath)
+      data <- ETLEBP::cria_base_intermediaria_fapesp(origem_processos = i.inFile6$datapath)
 
       #Criando dataset com casos novos
       #filename <- "data/DB_EIP/EIP_20210415.db"
@@ -1025,24 +728,13 @@ mod_tratamento_server <- function(id){
 
       data <- ETLEBP::executa_tratamento_incremental(data, filename)
 
-      # con <- DBI::dbConnect(RSQLite::SQLite(),
-      #                       ":memory:",
-      #                       dbname = filename)
-      # #importando tabela com os titulos de projeto
-      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
-      #
-      # data <- data %>%
-      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
-      #                                 "sim",
-      #                                 "não"))
-
       return(data)
     })
 
     #Fazer o Download
     output$i.download6 <- downloadHandler(
       filename = function() {
-        paste(i.myData6(), ".csv", sep = "")
+        paste("fapesp_interm", ".csv", sep = "")
       },
       content = function(file) {
         write.csv(i.myData6(), file, row.names = FALSE)
