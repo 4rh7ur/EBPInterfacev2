@@ -35,13 +35,14 @@ mod_carga_server <- function(id){
     myData <- reactive({
       inFile <- input$carga_final
       if (is.null(inFile)) return(NULL)
-      data <- data.table::fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
+      #data <- data.table::fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
+      data<- read.csv2(inFile$datapath)
 
       return(data)
     })
 
     data<- reactive({
-      data<- read.csv(input$carga_final$datapath)
+      data<- read.csv2(input$carga_final$datapath)
     })
 
  myData_sqlite <- reactive({
@@ -72,7 +73,7 @@ mod_carga_server <- function(id){
     #Carga incremental
 
     data<- reactive({
-      data<- read.csv(input$carga_final$datapath)
+      data<- read.csv2(input$carga_final$datapath)
     })
 
 

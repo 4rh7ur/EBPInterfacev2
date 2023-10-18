@@ -76,7 +76,10 @@ mod_tratamento_ui <- function(id){
               multiple = FALSE,
               accept = c("text/csv",
                          "text/comma-separated-values,text/plain",
-                         ".csv")
+                         ".csv",
+                         ".ods",
+                         ".xlsx",
+                         ".xls")
             ),
 
 
@@ -92,7 +95,10 @@ mod_tratamento_ui <- function(id){
               multiple = FALSE,
               accept = c("text/csv",
                          "text/comma-separated-values,text/plain",
-                         ".csv")
+                         ".csv",
+                         ".xlsx",
+                         ".xls",
+                         ".ods")
             ),
 
 
@@ -109,7 +115,9 @@ mod_tratamento_ui <- function(id){
               accept = c("text/csv",
                          "text/comma-separated-values,text/plain",
                          ".csv",
-                         ".ods")
+                         ".ods",
+                         ".xlsx",
+                         ".xls")
             ),
 
             downloadButton(ns("download5"), "Executar Tratamento e Baixar Dataset"),
@@ -124,7 +132,9 @@ mod_tratamento_ui <- function(id){
               accept = c("text/csv",
                          "text/comma-separated-values,text/plain",
                          ".csv",
-                         ".xlsx")
+                         ".xlsx",
+                         ".xls",
+                         ".ods")
             ),
 
             downloadButton(ns("download6"), "Executar Tratamento e Baixar Dataset"),
@@ -135,20 +145,14 @@ mod_tratamento_ui <- function(id){
             condition = "input.id1 == 'Fonte CNPQ'",
             fileInput(
               ns("file7"),
-              "Indique o diretório de Bolsas no Exterior 2004 a 2021.xlsx",
+              "3. Indique o diretório da base primária do CNPq",
               multiple = FALSE,
               accept = c("text/csv",
                          "text/comma-separated-values,text/plain",
-                         ".csv")
-            ),
-
-            fileInput(
-              ns("file77"),
-              "Indique o diretório de Bolsas Pais - 2004 a 2021.xlsx",
-              multiple = FALSE,
-              accept = c("text/csv",
-                         "text/comma-separated-values,text/plain",
-                         ".csv")
+                         ".csv",
+                         ".xlsx",
+                         ".xls",
+                         ".ods")
             ),
 
             downloadButton(ns("download7"), "Executar Tratamento e Baixar Dataset"),
@@ -208,14 +212,6 @@ mod_tratamento_ui <- function(id){
                            "text/comma-separated-values,text/plain",
                            ".csv")
               ),
-              # fileInput(
-              #   ns("i.file22"),
-              #   "Indique o diretório de anp_agregados_declarados",
-              #   multiple = FALSE,
-              #   accept = c("text/csv",
-              #              "text/comma-separated-values,text/plain",
-              #              ".csv")
-              # ),
 
               downloadButton(ns("i.download2"), "Executar Tratamento e Baixar Dataset")
             ),
@@ -228,7 +224,10 @@ mod_tratamento_ui <- function(id){
                 multiple = FALSE,
                 accept = c("text/csv",
                            "text/comma-separated-values,text/plain",
-                           ".csv")
+                           ".csv",
+                           ".xlsx",
+                           ".xls",
+                           ".ods")
               ),
 
 
@@ -245,7 +244,10 @@ mod_tratamento_ui <- function(id){
                 multiple = FALSE,
                 accept = c("text/csv",
                            "text/comma-separated-values,text/plain",
-                           ".csv")
+                           ".csv",
+                           ".xlsx",
+                           ".xls",
+                           ".ods")
               ),
 
 
@@ -263,7 +265,9 @@ mod_tratamento_ui <- function(id){
                 accept = c("text/csv",
                            "text/comma-separated-values,text/plain",
                            ".csv",
-                           "ods")
+                           ".ods",
+                           ".xlsx",
+                           ".xls")
               ),
 
               downloadButton(ns("i.download5"), "Executar Tratamento e Baixar Dataset"),
@@ -278,7 +282,9 @@ mod_tratamento_ui <- function(id){
                 accept = c("text/csv",
                            "text/comma-separated-values,text/plain",
                            ".csv",
-                           ".xlsx")
+                           ".xlsx",
+                           ".xls",
+                           ".ods")
               ),
 
               downloadButton(ns("i.download6"), "Executar Tratamento e Baixar Dataset"),
@@ -289,20 +295,14 @@ mod_tratamento_ui <- function(id){
               condition = "input.id2 == 'Fonte CNPQ'",
               fileInput(
                 ns("i.file7"),
-                "Indique o diretório de Bolsas no Exterior 2004 a 2021.xlsx",
+                "3. Indique o diretório da base primária do CNPq",
                 multiple = FALSE,
                 accept = c("text/csv",
                            "text/comma-separated-values,text/plain",
-                           ".csv")
-              ),
-
-              fileInput(
-                ns("i.file77"),
-                "Indique o diretório de Bolsas Pais - 2004 a 2021.xlsx",
-                multiple = FALSE,
-                accept = c("text/csv",
-                           "text/comma-separated-values,text/plain",
-                           ".csv")
+                           ".csv",
+                           ".xls",
+                           ".xlsx",
+                           ".ods")
               ),
 
               downloadButton(ns("i.download7"), "Executar Tratamento e Baixar Dataset"),
@@ -337,7 +337,6 @@ mod_tratamento_server <- function(id){
 
 #Carga Completa
     #Aneel
-
 
     myData <- reactive({
       inFile <- input$file1
@@ -405,7 +404,6 @@ mod_tratamento_server <- function(id){
       filesqlite<- input$file_sqlite
       if (is.null(filesqlite)) return(NULL)
       fonte <- filesqlite$datapath
-
 
       data <- ETLEBP::executa_tratamento_completo(data, fonte)
 
@@ -507,52 +505,16 @@ mod_tratamento_server <- function(id){
     myData7<- reactive({
       inFile7 <- input$file7
       if (is.null(inFile7)) return(NULL)
-      inFile77 <- input$file77
-      if (is.null(inFile77)) return(NULL)
+
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
-      data <- ETLEBP::cria_base_intermediaria_cnpq(origem_processos1 = inFile7$datapath,
-                                                   origem_processos2 = inFile77$datapath)
+      data <- ETLEBP::cria_base_intermediaria_cnpq(origem_processos = inFile7$datapath)
 
       #fonte <- "data/DB_EIP/EIP_20210415.db"
       filesqlite<- input$file_sqlite
       if (is.null(filesqlite)) return(NULL)
       fonte <- filesqlite$datapath
 
-
       data <- ETLEBP::executa_tratamento_completo(data, fonte)
-
-      # con <- DBI::dbConnect(RSQLite::SQLite(),
-      #                       ":memory:",
-      #                       dbname = fonte)
-      # mytbl2 <- DBI::dbReadTable(con,"dm_categoria")
-      # mytbl3 <- DBI::dbReadTable(con,"dm_formentador")
-      # mytbl6 <- DBI::dbReadTable(con,"dm_projeto")
-      # mytbl7 <- DBI::dbReadTable(con,"ft_dispendio")
-      #
-      #
-      # #inserir categorias IEA do sqlite na base
-      #
-      # #criando um objeto com informações sobre as categorias de IEA
-      # consulta <- dplyr::select(mytbl7, id_item, id_cat2, id_formnt)
-      #
-      # #puxando as descrições das categorias
-      # consulta <- dplyr::left_join(consulta, mytbl2[,c("id","cat2")],
-      #                              by = c("id_cat2" = "id"))
-      # #trazendo as informações de fomentador
-      # consulta <- dplyr::left_join(consulta, mytbl3[,c("id_formentador","nme_form")],
-      #                              by = c("id_formnt"= "id_formentador"))
-      #
-      # #trazendo as informações de titulo
-      # consulta <- dplyr::left_join(consulta, mytbl6[,c("título", "id_item")])
-      #
-      # #fazendo o merge
-      # data <- dplyr::left_join(data, consulta[,c ("título", "cat2") ],
-      #                          by = c("titulo_projeto"= "título")) %>% unique()
-      # # criar uma coluna que diz se o caso já existe no sqlite
-      # data <- data %>%
-      #   dplyr::mutate(existe = ifelse(titulo_projeto %in% mytbl6$'título',
-      #                                 "sim",
-      #                                 "não"))
 
       return(data)
     })
@@ -560,7 +522,7 @@ mod_tratamento_server <- function(id){
     #Fazer o Download
     output$download7 <- downloadHandler(
       filename = function() {
-        paste(myData7(), ".csv", sep = "")
+        paste("cnpq_interm", ".csv", sep = "")
       },
       content = function(file) {
         write.csv(myData7(), file, row.names = FALSE)
@@ -607,9 +569,7 @@ mod_tratamento_server <- function(id){
 
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
 
-      data <- ETLEBP::cria_base_intermediaria_anp(origem_processos = i.inFile2$datapath#,
-                                                  #origem_enriquecimento = i.inFile22$datapath
-                                                  )
+      data <- ETLEBP::cria_base_intermediaria_anp(origem_processos = i.inFile2$datapath)
       #Criando dataset com casos novos
       #filename <- "data/DB_EIP/EIP_20210415.db"
       filesqlite<- input$file_sqlite
@@ -678,7 +638,7 @@ mod_tratamento_server <- function(id){
     #Fazer o Download
     output$i.download4 <- downloadHandler(
       filename = function() {
-        paste(i.myData4(), ".csv", sep = "")
+        paste("cnen_interm", ".csv", sep = "")
       },
       content = function(file) {
         write.csv(i.myData4(), file, row.names = FALSE)
@@ -747,11 +707,9 @@ mod_tratamento_server <- function(id){
     i.myData7 <- reactive({
       i.inFile7 <- input$i.file7
       if (is.null(i.inFile7)) return(NULL)
-      i.inFile77 <- input$i.file77
-      if (is.null(i.inFile77)) return(NULL)
+
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
-      data <- ETLEBP::cria_base_intermediaria_cnpq(origem_processos1 = i.inFile7$datapath,
-                                                   origem_processos2 = i.inFile77$datapath)
+      data <- ETLEBP::cria_base_intermediaria_cnpq(origem_processos = i.inFile7$datapath)
 
       #Criando dataset com casos novos
       #filename <- "data/DB_EIP/EIP_20210415.db"
@@ -778,7 +736,7 @@ mod_tratamento_server <- function(id){
     #Fazer o Download
     output$i.download7 <- downloadHandler(
       filename = function() {
-        paste(i.myData7(), ".csv", sep = "")
+        paste("cnpq_interm", ".csv", sep = "")
       },
       content = function(file) {
         write.csv(i.myData7(), file, row.names = FALSE)
