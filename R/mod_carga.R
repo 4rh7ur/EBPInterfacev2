@@ -18,7 +18,7 @@ mod_carga_ui <- function(id){
                                   shiny::fileInput(ns("sqlite"), "Indique o Diretório do SQLite"),
                                   shiny::actionButton(ns("carga1"), "Executar Carregamento Completo no SQLite"),
                                   shiny::actionButton(ns("carga2"), "Executar Carregamento Incremental no SQLite"),
-                                  shiny::actionButton(ns("carga3"), "Executar Carga Incremental ANP no SQLite"),
+                                  #shiny::actionButton(ns("carga3"), "Executar Carga Incremental ANP no SQLite"),
                                   width = 10))
 
 
@@ -36,13 +36,13 @@ mod_carga_server <- function(id){
       inFile <- input$carga_final
       if (is.null(inFile)) return(NULL)
       #data <- data.table::fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
-      data<- read.csv2(inFile$datapath)
+      data<- read.csv(inFile$datapath)
 
       return(data)
     })
 
     data<- reactive({
-      data<- read.csv2(input$carga_final$datapath)
+      data<- read.csv(input$carga_final$datapath)
     })
 
  myData_sqlite <- reactive({
@@ -53,9 +53,8 @@ mod_carga_server <- function(id){
  })
 
 
-
-
-    observeEvent(input$carga1, { ETLEBP::executa_carga_completa(data(), filename)
+    #observeEvent(input$carga1, { ETLEBP::executa_carga_completa(data(), filename)
+    observeEvent(input$carga1, { ETLEBP::executa_carga_completa(data(), here::here(input$sqlite$datapath))
 
 
     })
@@ -72,16 +71,15 @@ mod_carga_server <- function(id){
     #------------------------
     #Carga incremental
 
-    data<- reactive({
-      data<- read.csv2(input$carga_final$datapath)
+    data2<- reactive({
+      data<- read.csv(input$carga_final$datapath)
     })
 
 
+    #observeEvent(input$carga2, {ETLEBP::executa_carga_incremental(data(), filename)
+    observeEvent(input$carga2, { ETLEBP::executa_carga_incremental(data2(), here::here(input$sqlite$datapath))
 
-
-    observeEvent(input$carga2, {ETLEBP::executa_carga_incremental(data(), filename)
     })
-
 
     #Mandar msg p usuário
     observeEvent(input$carga2, {
@@ -90,32 +88,7 @@ mod_carga_server <- function(id){
                              type = "success")
 
     })
- ## Carga Incremental ANP ------------------------------------------------------------------
-
-    data<- reactive({
-      data<- read.csv(input$carga_final$datapath)
-    })
-
-
-
-    observeEvent(input$carga3, {ETLEBP::executa_carga_gc(data(), filename)
-    })
-
-
-    #Mandar msg p usuário
-    observeEvent(input$carga3, {
-      shinyalert::shinyalert(title = "OK!",
-                             text = "Carregado para o SQLite com Sucesso.",
-                             type = "success")
-
-    })
-
-
   })
 }
 
-## To be copied in the UI
-# mod_carga_ui("carga_1")
 
-## To be copied in the server
-# mod_carga_server("carga_1")
