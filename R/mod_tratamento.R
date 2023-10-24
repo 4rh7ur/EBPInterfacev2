@@ -37,7 +37,7 @@ mod_tratamento_ui <- function(id){
             "Fonte FINEP"
           )
         ),
-        fluidRow(
+        fluidRow(column(width = 10,
           conditionalPanel(
             condition = "input.id1 == 'Fonte ANEEL'",
             fileInput(
@@ -57,7 +57,7 @@ mod_tratamento_ui <- function(id){
             condition = "input.id1 == 'Fonte ANP'",
             fileInput(
               ns("file2"),
-              "3. Indique o diretório da base primária da ANP",
+              " 3. Indique o diretório da base primária da ANP",
               multiple = FALSE,
               accept = c("text/csv",
                          "text/comma-separated-values,text/plain",
@@ -158,6 +158,7 @@ mod_tratamento_ui <- function(id){
             downloadButton(ns("download7"), "Executar Tratamento e Baixar Dataset"),
             width = 10
           )
+          )
         )
       ),#fim conditional panel
 
@@ -185,7 +186,7 @@ mod_tratamento_ui <- function(id){
             )
           ),
 
-          fluidRow(
+          fluidRow(column(width = 10,
             conditionalPanel(
               condition = "input.id2 == 'Fonte ANEEL'",
               fileInput(
@@ -307,6 +308,7 @@ mod_tratamento_ui <- function(id){
 
               downloadButton(ns("i.download7"), "Executar Tratamento e Baixar Dataset"),
               width = 10
+            )
             )
 
           )#Fim Fluidrow
