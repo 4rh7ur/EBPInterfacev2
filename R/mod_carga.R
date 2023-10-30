@@ -5,20 +5,27 @@
 #' @param id,input,output,session Internal parameters for {shiny}.
 #' @noRd
 #' @import RSQLite
+#' @import shinyFiles
+#' @import fs
 #' @importFrom shiny NS tagList
+
 mod_carga_ui <- function(id){
   ns <- NS(id)
   tagList(
     shiny::fluidRow(shiny::column(shinyalert::useShinyalert(),
-                                  shiny::fileInput(ns("carga_final"), "Indique o Diretório do Dataset a Ser Incluído",
-                                                   multiple = FALSE,
-                                                   accept = c("text/csv",
-                                                              "text/comma-separated-values,text/plain",
-                                                              ".csv")),
-                                  shiny::fileInput(ns("sqlite"), "Indique o Diretório do SQLite"),
+                                  # shiny::fileInput(ns("carga_final"), "Indique o Diretório do Dataset a Ser Incluído",
+                                  #                  multiple = FALSE,
+                                  #                  accept = c("text/csv",
+                                  #                             "text/comma-separated-values,text/plain",
+                                  #                             ".csv")),
+                                  h5("1.Indique o Diretório do Dataset a Ser Incluído"),
+                                  shinyFiles::shinyFilesButton(ns("carga_final"), "Buscar", "Please select a file", multiple = F, viewtype = "detail"),
+                                  h5("2.Indique o Diretório da Base SQLite"),
+                                  shinyFiles::shinyFilesButton(ns("sqlite"), "Buscar", "Indique o Diretório da Base SQLite", multiple = FALSE, viewtype = "detail"),
+                                  #shiny::fileInput(ns("sqlite"), "Indique o Diretório da Base SQLite"),
+                                  hr(),
                                   shiny::actionButton(ns("carga1"), "Executar Carregamento Completo no SQLite"),
                                   shiny::actionButton(ns("carga2"), "Executar Carregamento Incremental no SQLite"),
-                                  #shiny::actionButton(ns("carga3"), "Executar Carga Incremental ANP no SQLite"),
                                   width = 10))
 
 
@@ -32,33 +39,26 @@ mod_carga_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
+    volumes <- c(Home = fs::path_home(), "R Installation" = R.home(), getVolumes()())
+    # by setting `allowDirCreate = FALSE` a user will not be able to create a new directory
+    shinyFileChoose(input, "carga_final", roots = volumes, session = session)
+    shinyFileChoose(input, "sqlite", roots = volumes, session = session)
+
+    sel_path <- reactive({return(print(data.frame(parseFilePaths(volumes, input$sqlite))$datapath))})
+
+
     myData <- reactive({
       inFile <- input$carga_final
       if (is.null(inFile)) return(NULL)
-      #data <- data.table::fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
-      data<- read.csv(inFile$datapath)
-
-      return(data)
+      data<- read.csv(data.frame(parseFilePaths(volumes, inFile))$datapath)
     })
 
-    data<- reactive({
-      data<- read.csv(input$carga_final$datapath)
-    })
+    #------------------------
+    #Carga completa
 
- myData_sqlite <- reactive({
-
-   filesqlite<- input$sqlite
-   if (is.null(filesqlite)) return(NULL)
-   filename <- here::here(filesqlite$datapath)
- })
-
-
-    #observeEvent(input$carga1, { ETLEBP::executa_carga_completa(data(), filename)
-    observeEvent(input$carga1, { ETLEBP::executa_carga_completa(data(), here::here(input$sqlite$datapath))
-
-
-    })
-
+    observeEvent(input$carga1,
+                 {ETLEBP::executa_carga_completa(myData(), sel_path())
+                 })
 
     #Mandar msg p usuário
     observeEvent(input$carga1, {
@@ -71,13 +71,8 @@ mod_carga_server <- function(id){
     #------------------------
     #Carga incremental
 
-    data2<- reactive({
-      data<- read.csv(input$carga_final$datapath)
-    })
-
-
-    #observeEvent(input$carga2, {ETLEBP::executa_carga_incremental(data(), filename)
-    observeEvent(input$carga2, { ETLEBP::executa_carga_incremental(data2(), here::here(input$sqlite$datapath))
+    observeEvent(input$carga2,
+                 {ETLEBP::executa_carga_incremental(myData(), sel_path())
 
     })
 

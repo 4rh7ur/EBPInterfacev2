@@ -4,6 +4,7 @@
 #' @import shiny
 #' @import shinythemes
 #' @import shinyalert
+#' @import shinyFile
 #' @noRd
 app_server <- function( input, output, session ) {
   # Your application server logic
