@@ -12,9 +12,9 @@
 
 mod_status_ui <- function(id){
   ns <- NS(id)
-  page_sidebar(
-    theme = bs_theme(bootswatch = "minty"),
-    sidebar = sidebar(
+  bslib::page_sidebar(
+    theme = bslib::bs_theme(bootswatch = "minty"),
+    sidebar = bslib::sidebar(
       tagList( actionLink(ns("selectall"),"Selecionar Todos"),
                checkboxGroupInput(
                  ns("fomentos"), "Fomentador:",
