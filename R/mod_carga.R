@@ -41,8 +41,8 @@ mod_carga_server <- function(id){
 
     volumes <- c(Home = fs::path_home(), "R Installation" = R.home(), shinyFiles::getVolumes()())
     # by setting `allowDirCreate = FALSE` a user will not be able to create a new directory
-    shinyFileChoose(input, "carga_final", roots = volumes, session = session)
-    shinyFileChoose(input, "sqlite", roots = volumes, session = session)
+    shinyFiles::shinyFileChoose(input, "carga_final", roots = volumes, session = session)
+    shinyFiles::shinyFileChoose(input, "sqlite", roots = volumes, session = session)
 
     sel_path <- reactive({return(print(data.frame(parseFilePaths(volumes, input$sqlite))$datapath))})
 
