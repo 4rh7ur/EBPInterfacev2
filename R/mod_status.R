@@ -9,6 +9,7 @@
 #' @import plotly
 #' @import RSQLite
 #' @import DT
+#' @import dplyr
 
 mod_status_ui <- function(id){
   ns <- NS(id)
@@ -91,7 +92,7 @@ mod_status_server <- function(id){
     tabela <- tabela[,c("ano","nme_form","vlr")]
     tabela <- aggregate(vlr ~ ano*nme_form, tabela, sum)
     tabela <- reshape(tabela, idvar = "ano", timevar = "nme_form", direction = "wide")
-    tabela <- rename(tabela,c( "Ano" = "ano",
+    tabela <- dplyr::rename(tabela,c( "Ano" = "ano",
                                "ANEEL" = "vlr.ANEEL",
                                "ANP" = "vlr.ANP",
                                "BNDES" = "vlr.BNDES",
@@ -101,7 +102,7 @@ mod_status_server <- function(id){
                                "FINEP" ="vlr.FINEP"))
 
     req(input$fomentos)
-    tabela <- tabela |> select("Ano",input$fomentos)
+    tabela <- tabela |> dplyr::select("Ano",input$fomentos)
     tabela
     })
 
@@ -109,14 +110,14 @@ mod_status_server <- function(id){
     myData2 <- reactive({
       tabela <- myData_etl()
       tabela <- tabela[,c("ano_inicio","nme_form")]
-      tabela <- tabela %>% rename( ano = ano_inicio)
+      tabela <- tabela %>% dplyr::rename( ano = ano_inicio)
       tabela <- data.frame(tabela,contador=1)
       tabela <- aggregate(contador ~ ano*nme_form, tabela, sum)
       tabela <- reshape(tabela, idvar = "ano", timevar = "nme_form", direction = "wide")
 
       tabela[is.na(tabela)] <- 0
 
-      tabela = rename(tabela,c( "Ano" = "ano",
+      tabela = dplyr::rename(tabela,c( "Ano" = "ano",
                                                             "ANEEL" = "contador.ANEEL",
                                                             "ANP" = "contador.ANP",
                                                             "BNDES" = "contador.BNDES",
@@ -126,7 +127,7 @@ mod_status_server <- function(id){
                                                             "FINEP" ="contador.FINEP"))
 
       req(input$fomentos)
-      tabela <- tabela |> select("Ano",input$fomentos)
+      tabela <- tabela |> dplyr::select("Ano",input$fomentos)
       tabela
     })
 
@@ -138,7 +139,7 @@ mod_status_server <- function(id){
       tabela <- aggregate(contador ~ ano*nme_form*cat1, tabela, sum)
       tabela$nme_form[tabela$nme_form=="CNEM"] <- "CNEN"
       tabela <- reshape(tabela, idvar = c("ano","nme_form"), timevar = "cat1", direction = "wide")
-      tabela <- tabela %>% rename( Ano = ano)
+      tabela <- tabela %>% dplyr::rename( Ano = ano)
       colnames(tabela) <- c("Ano","nme_form","Cat_1","Cat_2","Cat_3","Cat_4",
                                           "Cat_5","Cat_6","Cat_7")
 
@@ -259,7 +260,7 @@ mod_status_server <- function(id){
       tabela <- tabela[,c("ano","nme_form","vlr")]
       tabela <- aggregate(vlr ~ ano*nme_form, tabela, sum)
       tabela <- reshape(tabela, idvar = "ano", timevar = "nme_form", direction = "wide")
-      tabela <- rename(tabela,c( "Ano" = "ano",
+      tabela <- dplyr::rename(tabela,c( "Ano" = "ano",
                                  "ANEEL" = "vlr.ANEEL",
                                  "ANP" = "vlr.ANP",
                                  "BNDES" = "vlr.BNDES",
@@ -269,7 +270,7 @@ mod_status_server <- function(id){
                                  "FINEP" ="vlr.FINEP"))
 
       req(input$fomentos)
-      tabela <- tabela |> select("Ano",input$fomentos)
+      tabela <- tabela |> dplyr::select("Ano",input$fomentos)
       tabela
     })
 
@@ -277,14 +278,14 @@ mod_status_server <- function(id){
     myData2n <- reactive({
       tabela <- myData_etl2()
       tabela <- tabela[,c("ano_inicio","nme_form")]
-      tabela <- tabela %>% rename( ano = ano_inicio)
+      tabela <- tabela %>% dplyr::rename( ano = ano_inicio)
       tabela <- data.frame(tabela,contador=1)
       tabela <- aggregate(contador ~ ano*nme_form, tabela, sum)
       tabela <- reshape(tabela, idvar = "ano", timevar = "nme_form", direction = "wide")
 
       tabela[is.na(tabela)] <- 0
 
-      tabela = rename(tabela,c( "Ano" = "ano",
+      tabela = dplyr::rename(tabela,c( "Ano" = "ano",
                                 "ANEEL" = "contador.ANEEL",
                                 "ANP" = "contador.ANP",
                                 "BNDES" = "contador.BNDES",
@@ -294,7 +295,7 @@ mod_status_server <- function(id){
                                 "FINEP" ="contador.FINEP"))
 
       req(input$fomentos)
-      tabela <- tabela |> select("Ano",input$fomentos)
+      tabela <- tabela |> dplyr::select("Ano",input$fomentos)
       tabela
     })
 
@@ -306,7 +307,7 @@ mod_status_server <- function(id){
       tabela <- aggregate(contador ~ ano*nme_form*cat1, tabela, sum)
       tabela$nme_form[tabela$nme_form=="CNEM"] <- "CNEN"
       tabela <- reshape(tabela, idvar = c("ano","nme_form"), timevar = "cat1", direction = "wide")
-      tabela <- tabela %>% rename( Ano = ano)
+      tabela <- tabela %>% dplyr::rename( Ano = ano)
       colnames(tabela) <- c("Ano","nme_form","Cat_1","Cat_2","Cat_3","Cat_4",
                             "Cat_5","Cat_6","Cat_7")
 

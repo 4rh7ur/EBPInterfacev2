@@ -44,13 +44,13 @@ mod_carga_server <- function(id){
     shinyFiles::shinyFileChoose(input, "carga_final", roots = volumes, session = session)
     shinyFiles::shinyFileChoose(input, "sqlite", roots = volumes, session = session)
 
-    sel_path <- reactive({return(print(data.frame(parseFilePaths(volumes, input$sqlite))$datapath))})
+    sel_path <- reactive({return(print(data.frame(shinyFiles::parseFilePaths(volumes, input$sqlite))$datapath))})
 
 
     myData <- reactive({
       inFile <- input$carga_final
       if (is.null(inFile)) return(NULL)
-      data<- read.csv(data.frame(parseFilePaths(volumes, inFile))$datapath)
+      data<- read.csv(data.frame(shinyFiles::parseFilePaths(volumes, inFile))$datapath)
     })
 
     #------------------------
