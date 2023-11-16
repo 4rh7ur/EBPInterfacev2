@@ -22,6 +22,11 @@ mod_status_ui <- function(id){
                  ns("fomentos"), "Fomentador:",
                  choices = c("ANEEL", "ANP","BNDES","CNEN","CNPq","FAPESP","FINEP"))
       ),
+      tagList(checkboxGroupInput(
+                 ns("deflator"), "Aplicar Deflator:",
+                 choices = c("Sim","Não"),
+                 selected = "Sim")
+      ),
       fileInput(ns("file_sqlite"), "Indique o diretório da base SQLite (Atual)"),
       fileInput(ns("file_sqlite2"), "Indique o diretório da base SQLite (Novo)")
     ),
@@ -40,7 +45,7 @@ mod_status_ui <- function(id){
     fluidRow(
       mainPanel(
         tabsetPanel(
-          tabPanel("Novo",DT::DTOutput(ns("ini2")), h6("Carregue o banco de dados novo e selecione o(s) Fomentador(es) para visualizar as demais abas.")),
+          tabPanel("Novo",DT::DTOutput(ns("ini2")), h6("Após realizar todo o processo de etl da ferramenta, carregue o banco de dados novo e selecione o(s) Fomentador(es) para visualizar as demais abas.")),
           tabPanel("Valor",plotly::plotlyOutput(ns("graph12"))),
           tabPanel("Qtd - Atuais e Novos",plotly::plotlyOutput(ns("graph22"))),
           tabPanel("Categorias",plotly::plotlyOutput(ns("graph52"))),
@@ -76,6 +81,7 @@ mod_status_server <- function(id){
       tbl_dm_projeto <- DBI::dbReadTable(con,"dm_projeto")
       tbl_ft_dispendio <- DBI::dbReadTable(con,"ft_dispendio")
       tbl_ft_projeto <- dbReadTable(con, "dm_projeto")
+      tbl_deflator <- DBI::dbReadTable(con,"deflatores")
 
       dm_projeto <- tbl_dm_projeto %>% dplyr::distinct(id_item,dta_inicio)
 
@@ -83,12 +89,19 @@ mod_status_server <- function(id){
       tabela <- merge(tabela,tbl_dm_categoria,by.x = "id_cat2",by.y = "id",all.x = T)
       tabela <- merge(tabela,dm_projeto[,c("id_item","dta_inicio")], by ="id_item",all.x = T)
       tabela$ano_inicio <- lubridate::year(tabela$dta_inicio.y)
-      tabela <- subset(tabela,tabela$ano_inicio >= 2013)
+      tabela <- merge(tabela,tbl_deflator,by = "ano",all.x = T)
+      tabela <- subset(tabela,tabela$ano >= 2013)
 
     })
 
-    myData_aux1 <- reactive({
+    myData_tab <- reactive({
       tabela <- myData_etl()
+      tabela <- subset(tabela,tabela$ano_inicio >= 2013)
+      tabela
+    })
+
+    myData_aux1 <- reactive({
+      tabela <- myData_tab()
       tabela <- tabela %>% dplyr::distinct(id_item,ano_inicio,nme_form)
       tabela$chave <- paste0(tabela$id_item,tabela$ano_inicio,tabela$nme_form)
       tabela$tipo <- "anterior"
@@ -98,6 +111,10 @@ mod_status_server <- function(id){
 ################# ETL PARA GRÁFICO DA ABA VALOR (ATUAL)
     myData <- reactive({
     tabela <- myData_etl()
+    tabela <- tabela[,c("ano","nme_form","vlr","deflator")]
+    req(input$deflator)
+    tabela$deflator <- if(input$deflator=="Sim"){tabela$deflator}else{100}
+    tabela$vlr <- (tabela$deflator*tabela$vlr)/100
     tabela <- tabela[,c("ano","nme_form","vlr")]
     tabela <- aggregate(vlr ~ ano*nme_form, tabela, sum)
     tabela <- reshape(tabela, idvar = "ano", timevar = "nme_form", direction = "wide")
@@ -142,7 +159,8 @@ mod_status_server <- function(id){
 
 ############# ETL PARA GRÁFICO DA ABA CATEGORIAS (ATUAL)
     myData3 <- reactive({
-      tabela <- myData_etl()
+      tabela <- myData_tab()
+      tabela <- subset(tabela,tabela$ano_inicio >= 2013)
       tabela <- tabela %>% dplyr::distinct(id_item,ano_inicio,nme_form,cat1)
       tabela <- tabela %>% rename( Ano = ano_inicio)
       tabela <- tabela[,c("nme_form","cat1","Ano")]
@@ -254,6 +272,7 @@ mod_status_server <- function(id){
       tbl_dm_projeto <- DBI::dbReadTable(con,"dm_projeto")
       tbl_ft_dispendio <- DBI::dbReadTable(con,"ft_dispendio")
       tbl_ft_projeto <- dbReadTable(con, "dm_projeto")
+      tbl_deflator <- DBI::dbReadTable(con,"deflatores")
 
       dm_projeto <- tbl_dm_projeto %>% dplyr::distinct(id_item,dta_inicio)
 
@@ -261,13 +280,24 @@ mod_status_server <- function(id){
       tabela <- merge(tabela,tbl_dm_categoria,by.x = "id_cat2",by.y = "id",all.x = T)
       tabela <- merge(tabela,dm_projeto[,c("id_item","dta_inicio")], by ="id_item",all.x = T)
       tabela$ano_inicio <- lubridate::year(tabela$dta_inicio.y)
-      tabela <- subset(tabela,tabela$ano_inicio >= 2013)
+      tabela <- merge(tabela,tbl_deflator,by = "ano",all.x = T)
+      tabela <- subset(tabela,tabela$ano >= 2013)
 
+    })
+
+    myData_tab2 <- reactive({
+      tabela <- myData_etl2()
+      tabela <- subset(tabela,tabela$ano_inicio >= 2013)
+      tabela
     })
 
 ################# ETL PARA GRÁFICO DA ABA VALOR (NOVO)
     myDatan <- reactive({
       tabela <- myData_etl2()
+      tabela <- tabela[,c("ano","nme_form","vlr","deflator")]
+      req(input$deflator)
+      tabela$deflator <- if(input$deflator=="Sim"){tabela$deflator}else{100}
+      tabela$vlr <- (tabela$deflator*tabela$vlr)/100
       tabela <- tabela[,c("ano","nme_form","vlr")]
       tabela <- aggregate(vlr ~ ano*nme_form, tabela, sum)
       tabela <- reshape(tabela, idvar = "ano", timevar = "nme_form", direction = "wide")
@@ -287,7 +317,7 @@ mod_status_server <- function(id){
 
 ############# ETL PARA GRÁFICO DA ABA NOVOS (NOVO)
     myData_aux2 <- reactive({
-      tabela <- myData_etl2()
+      tabela <- myData_tab2()
       tabela <- tabela %>% dplyr::distinct(id_item,ano_inicio,nme_form)
       tabela$chave <- paste0(tabela$id_item,tabela$ano_inicio,tabela$nme_form)
       tabela$tipo <- "novo"
@@ -305,8 +335,14 @@ mod_status_server <- function(id){
       tabela <- reshape(tabela, idvar = c("Ano","nme_form"), timevar = "tipo", direction = "wide")
       tabela[is.na(tabela)] <- 0
 
-      tabela = rename(tabela,c("Atual" = "contador.anterior",
-                               "Novo" = "contador.novo"))
+      if("contador.novo" %in% colnames(tabela))
+      {
+        tabela = rename(tabela,c("Atual" = "contador.anterior",
+                                 "Novo" = "contador.novo"))
+      }else{
+        tabela = rename(tabela,c("Atual" = "contador.anterior"))
+      }
+
       req(input$fomentos)
       tabela <- tabela |> filter(nme_form %in% c(input$fomentos))
       tabela
@@ -314,7 +350,7 @@ mod_status_server <- function(id){
 
 ############# ETL PARA GRÁFICO DA ABA CATEGORIAS (NOVO)
     myData3n <- reactive({
-      tabela <- myData_etl2()
+      tabela <- myData_tab2()
       tabela <- tabela %>% dplyr::distinct(id_item,ano_inicio,nme_form,cat1)
       tabela <- tabela %>% rename( Ano = ano_inicio)
       tabela <- tabela[,c("nme_form","cat1","Ano")]
