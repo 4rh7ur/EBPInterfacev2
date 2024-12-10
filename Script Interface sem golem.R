@@ -2,16 +2,20 @@ library(shiny)
 library(tidyverse)
 library(DataEditR)
 library(shinyFiles)
-library(ETLEBP)
+library(data.table)
+# library(ETLEBP)
 ui <- fluidPage(tabsetPanel(tabPanel("Status",
                                      tableOutput("status")), #fim tabpanel1
                             tabPanel("Estação de Tratamento", id = "a2",
                                      fluidRow(
-                                       column(selectInput("id1", "Selecione a Fonte dos Dados que Receber? o Tratamento",
+                                       # column(
+                                         selectInput("id1", "Selecione a Fonte dos Dados que Receber? o Tratamento",
                                                           choices = c("Fonte ANEEL", "Fonte ANP",
                                                                       "Fonte BNDES", "Fonte CNEN",
                                                                       "Fonte CNPQ", "Fonte FAPESP",
-                                                                      "Fonte FINEP", "Fonte FNDCT")), width = 10)), #Fim da fluidrow1
+                                                                      "Fonte FINEP", "Fonte FNDCT")), width = 10
+                                         # )
+                                       ), #Fim da fluidrow1
                                      fluidRow(conditionalPanel(condition = "input.id1 == 'Fonte ANEEL'",
                                                                fileInput("file1", "Indique o diretório de PD Busca Textual",
                                                                          multiple = FALSE,
@@ -122,31 +126,31 @@ server <- function(input, output, session) {
   #Importando dados
 
   options(shiny.maxRequestSize=80*1024^3) # Maximum upload size allowed, in bytes
-#Aneel
-  myData <- reactive({
-    inFile <- input$file1
-    #if (is.null(inFile)) return(NULL)
-    inFile11 <- input$file11
-    #if (is.null(inFile)) return(NULL)
-    #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
-    data <- ETLEBP::cria_base_intermediaria_aneel(origem_processos = inFile$datapath,
-                                                  origem_equipes = inFile11$datapath)
-
-    return(data)
-  })
-#Renderizar Dataset
-  output$contents <- DT::renderDataTable({
-    setcolorder(myData(), input$rank_list_1)
-  })
-#Fazer o Download
-  output$download <- downloadHandler(
-    filename = function() {
-      paste(myData(), ".csv", sep = "")
-    },
-    content = function(file) {
-      write.csv(myData(), file, row.names = FALSE)
-    }
-  )
+# #Aneel
+#   myData <- reactive({
+#     inFile <- input$file1
+#     #if (is.null(inFile)) return(NULL)
+#     inFile11 <- input$file11
+#     #if (is.null(inFile)) return(NULL)
+#     #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
+#     data <- ETLEBP::cria_base_intermediaria_aneel(origem_processos = inFile$datapath,
+#                                                   origem_equipes = inFile11$datapath)
+#
+#     return(data)
+#   })
+# #Renderizar Dataset
+#   output$contents <- DT::renderDataTable({
+#     setcolorder(myData(), input$rank_list_1)
+#   })
+# #Fazer o Download
+#   output$download <- downloadHandler(
+#     filename = function() {
+#       paste(myData(), ".csv", sep = "")
+#     },
+#     content = function(file) {
+#       write.csv(myData(), file, row.names = FALSE)
+#     }
+#   )
 
   #ANP
   myData2 <- reactive({
@@ -155,14 +159,17 @@ server <- function(input, output, session) {
     inFile22 <- input$file22
     #if (is.null(inFile)) return(NULL)
     #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
-    data <- ETLEBP::cria_base_intermediaria_anp(origem_processos = inFile2$datapath,
-                                                  origem_enriquecimento = inFile22$datapath)
+    data <- cria_base_intermediaria_anp(origem_processos = inFile2$datapath
+                                                  # origem_enriquecimento = inFile22$datapath
+                                        )
 
     return(data)
   })
   #Renderizar Dataset
   output$contents2 <- DT::renderDataTable({
-    setcolorder(myData2(), input$rank_list_1)
+    setcolorder(myData2(),
+                # input$rank_list_1
+                )
   })
   #Fazer o Download
   output$download2 <- downloadHandler(
@@ -173,72 +180,72 @@ server <- function(input, output, session) {
       write.csv(myData2(), file, row.names = FALSE)
     }
   )
-  #BNDES
-  myData3 <- reactive({
-    inFile3 <- input$file3
-    #if (is.null(inFile)) return(NULL)
-    #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
-    data <- ETLEBP::cria_base_intermediaria_bndes(origem_processos = inFile3$datapath)
-
-    return(data)
-  })
-  #Renderizar Dataset
-  output$contents3 <- DT::renderDataTable({
-    setcolorder(myData3(), input$rank_list_1)
-  })
-  #Fazer o Download
-  output$download3 <- downloadHandler(
-    filename = function() {
-      paste(myData3(), ".csv", sep = "")
-    },
-    content = function(file) {
-      write.csv(myData3(), file, row.names = FALSE)
-    }
-  )
-  #CNEN
-  myData4 <- reactive({
-    inFile4 <- input$file4
-    #if (is.null(inFile)) return(NULL)
-    #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
-    data <- ETLEBP::cria_base_intermediaria_cnen(origem_processos = inFile4$datapath)
-
-    return(data)
-  })
-  #Renderizar Dataset
-  output$contents4 <- DT::renderDataTable({
-    setcolorder(myData4(), input$rank_list_1)
-  })
-  #Fazer o Download
-  output$download4 <- downloadHandler(
-    filename = function() {
-      paste(myData4(), ".csv", sep = "")
-    },
-    content = function(file) {
-      write.csv(myData4(), file, row.names = FALSE)
-    }
-  )
-  #CNEN
-  myData5 <- reactive({
-    inFile5 <- input$file5
-    #if (is.null(inFile)) return(NULL)
-    #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
-    data <- ETLEBP::cria_base_intermediaria_finep(origem_processos = inFile5$datapath)
-
-    return(data)
-  })
-  #Renderizar Dataset
-  output$contents5 <- DT::renderDataTable({
-    setcolorder(myData5(), input$rank_list_1)
-  })
-  #Fazer o Download
-  output$download5 <- downloadHandler(
-    filename = function() {
-      paste(myData5(), ".csv", sep = "")
-    },
-    content = function(file) {
-      write.csv(myData5(), file, row.names = FALSE)
-    }
-  )
+  # #BNDES
+  # myData3 <- reactive({
+  #   inFile3 <- input$file3
+  #   #if (is.null(inFile)) return(NULL)
+  #   #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
+  #   data <- ETLEBP::cria_base_intermediaria_bndes(origem_processos = inFile3$datapath)
+  #
+  #   return(data)
+  # })
+  # #Renderizar Dataset
+  # output$contents3 <- DT::renderDataTable({
+  #   setcolorder(myData3(), input$rank_list_1)
+  # })
+  # #Fazer o Download
+  # output$download3 <- downloadHandler(
+  #   filename = function() {
+  #     paste(myData3(), ".csv", sep = "")
+  #   },
+  #   content = function(file) {
+  #     write.csv(myData3(), file, row.names = FALSE)
+  #   }
+  # )
+  # #CNEN
+  # myData4 <- reactive({
+  #   inFile4 <- input$file4
+  #   #if (is.null(inFile)) return(NULL)
+  #   #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
+  #   data <- ETLEBP::cria_base_intermediaria_cnen(origem_processos = inFile4$datapath)
+  #
+  #   return(data)
+  # })
+  # #Renderizar Dataset
+  # output$contents4 <- DT::renderDataTable({
+  #   setcolorder(myData4(), input$rank_list_1)
+  # })
+  # #Fazer o Download
+  # output$download4 <- downloadHandler(
+  #   filename = function() {
+  #     paste(myData4(), ".csv", sep = "")
+  #   },
+  #   content = function(file) {
+  #     write.csv(myData4(), file, row.names = FALSE)
+  #   }
+  # )
+  # #CNEN
+  # myData5 <- reactive({
+  #   inFile5 <- input$file5
+  #   #if (is.null(inFile)) return(NULL)
+  #   #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
+  #   data <- ETLEBP::cria_base_intermediaria_finep(origem_processos = inFile5$datapath)
+  #
+  #   return(data)
+  # })
+  # #Renderizar Dataset
+  # output$contents5 <- DT::renderDataTable({
+  #   setcolorder(myData5(), input$rank_list_1)
+  # })
+  # #Fazer o Download
+  # output$download5 <- downloadHandler(
+  #   filename = function() {
+  #     paste(myData5(), ".csv", sep = "")
+  #   },
+  #   content = function(file) {
+  #     write.csv(myData5(), file, row.names = FALSE)
+  #   }
+  # )
 }
 
 shinyApp(ui, server)
