@@ -601,16 +601,16 @@ mod_tratamento_server <- function(id){
       inFile <- input$file1
       if (is.null(inFile)) return(NULL)
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
-      # data <- ETLEBP::cria_base_intermediaria_aneel(origem_processos = inFile$datapath)
-      data <- cria_base_intermediaria_aneel(origem_processos = conteudo1c())
+      data <- ETLEBPv2::cria_base_intermediaria_aneel(origem_processos = inFile$datapath)
+      #data <- cria_base_intermediaria_aneel(origem_processos = conteudo1c())
 
       #fonte <- "data/DB_EIP/EIP_20210415.db"
       filesqlite<- input$file_sqlite
       if (is.null(filesqlite)) return(NULL)
       fonte <- filesqlite$datapath
 
-      # data <- ETLEBP::executa_tratamento_completo(data, fonte)
-      data <- executa_tratamento_completo(data, fonte)
+      data <- ETLEBPv2::executa_tratamento_completo(data, fonte)
+      #data <- executa_tratamento_completo(data, fonte)
 
 
       return(data)
@@ -818,8 +818,8 @@ mod_tratamento_server <- function(id){
       inFile2 <- input$file2
       if (is.null(inFile2)) return(NULL)
 
-      # data <- ETLEBP::cria_base_intermediaria_anp(origem_processos = conteudo2c())
-      data <- cria_base_intermediaria_anp(origem_processos = conteudo2c())
+      data <- ETLEBPv2::cria_base_intermediaria_anp(origem_processos = conteudo2c())
+      #data <- cria_base_intermediaria_anp(origem_processos = conteudo2c())
 
 
       #fonte <- "data/DB_EIP/EIP_20210415.db"
@@ -827,8 +827,8 @@ mod_tratamento_server <- function(id){
       if (is.null(filesqlite)) return(NULL)
       fonte <- filesqlite$datapath
 
-      # data <- ETLEBP::executa_tratamento_completo(data, fonte)
-      data <- executa_tratamento_completo(data, fonte)
+      data <- ETLEBPv2::executa_tratamento_completo(data, fonte)
+      #data <- executa_tratamento_completo(data, fonte)
 
       return(data)
     })
@@ -1000,16 +1000,16 @@ mod_tratamento_server <- function(id){
       inFile3 <- input$file3
       if (is.null(inFile3)) return(NULL)
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
-      # data <- ETLEBP::cria_base_intermediaria_bndes(origem_processos = inFile3$datapath)
-      data <- cria_base_intermediaria_bndes(origem_processos = conteudo3c())
+      data <- ETLEBPv2::cria_base_intermediaria_bndes(origem_processos = inFile3$datapath)
+      #data <- cria_base_intermediaria_bndes(origem_processos = conteudo3c())
 
       #fonte <- "data/DB_EIP/EIP_20210415.db"
       filesqlite<- input$file_sqlite
       if (is.null(filesqlite)) return(NULL)
       fonte <- filesqlite$datapath
 
-      # data <- ETLEBP::executa_tratamento_completo(data, fonte)
-      data <- executa_tratamento_completo(data, fonte)
+      data <- ETLEBPv2::executa_tratamento_completo(data, fonte)
+      #data <- executa_tratamento_completo(data, fonte)
 
       return(data)
     })
@@ -1180,14 +1180,14 @@ mod_tratamento_server <- function(id){
       inFile4 <- input$file4
       if (is.null(inFile4)) return(NULL)
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
-      data <- cria_base_intermediaria_cnen(origem_processos = conteudo4c())
+      data <- ETLEBPv2::cria_base_intermediaria_cnen(origem_processos = conteudo4c())
 
       #fonte <- "data/DB_EIP/EIP_20210415.db"
       filesqlite<- input$file_sqlite
       if (is.null(filesqlite)) return(NULL)
       fonte <- filesqlite$datapath
 
-      data <- executa_tratamento_completo(data, fonte)
+      data <- ETLEBPv2::executa_tratamento_completo(data, fonte)
 
       return(data)
     })
@@ -1358,7 +1358,7 @@ mod_tratamento_server <- function(id){
       if (is.null(inFile5)) return(NULL)
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
       # data <- ETLEBP::cria_base_intermediaria_finep(origem_processos = inFile5$datapath)
-      data <- cria_base_intermediaria_finep(origem_processos = conteudo5c())
+      data <- ETLEBPv2::cria_base_intermediaria_finep(origem_processos = conteudo5c())
 
       #fonte <- "data/DB_EIP/EIP_20210415.db"
       filesqlite<- input$file_sqlite
@@ -1366,7 +1366,7 @@ mod_tratamento_server <- function(id){
       fonte <- filesqlite$datapath
 
       # data <- ETLEBP::executa_tratamento_completo(data, fonte)
-      data <- executa_tratamento_completo(data, fonte)
+      data <- ETLEBPv2::executa_tratamento_completo(data, fonte)
 
 
       return(data)
@@ -1541,7 +1541,7 @@ mod_tratamento_server <- function(id){
       if (is.null(inFile6)) return(NULL)
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
       # data <- ETLEBP::cria_base_intermediaria_fapesp(origem_processos = inFile6$datapath)
-      data <- cria_base_intermediaria_fapesp(origem_processos = conteudo6c())
+      data <- ETLEBPv2::cria_base_intermediaria_fapesp(origem_processos = conteudo6c())
 
       #fonte <- "data/DB_EIP/EIP_20210415.db"
       filesqlite<- input$file_sqlite
@@ -1549,7 +1549,7 @@ mod_tratamento_server <- function(id){
       fonte <- filesqlite$datapath
 
       # data <- ETLEBP::executa_tratamento_completo(data, fonte)
-      data <- executa_tratamento_completo(data, fonte)
+      data <- ETLEBPv2::executa_tratamento_completo(data, fonte)
 
       return(data)
     })
@@ -1726,7 +1726,7 @@ mod_tratamento_server <- function(id){
 
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
       # data <- ETLEBP::cria_base_intermediaria_cnpq(origem_processos = inFile7$datapath)
-      data <- cria_base_intermediaria_cnpq(origem_processos = conteudo7c())
+      data <- ETLEBPv2::cria_base_intermediaria_cnpq(origem_processos = conteudo7c())
 
       #fonte <- "data/DB_EIP/EIP_20210415.db"
       filesqlite<- input$file_sqlite
@@ -1734,7 +1734,7 @@ mod_tratamento_server <- function(id){
       fonte <- filesqlite$datapath
 
       # data <- ETLEBP::executa_tratamento_completo(data, fonte)
-      data <- executa_tratamento_completo(data, fonte)
+      data <- ETLEBPv2::executa_tratamento_completo(data, fonte)
 
       return(data)
     })
@@ -1912,7 +1912,7 @@ mod_tratamento_server <- function(id){
 
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
       # data <- ETLEBP::cria_base_intermediaria_aneel(origem_processos = i.inFile1$datapath)
-      data <- cria_base_intermediaria_aneel(origem_processos = conteudo1())
+      data <- ETLEBPv2::cria_base_intermediaria_aneel(origem_processos = conteudo1())
 
       #Criando dataset com casos novos
       #filename <- "data/DB_EIP/EIP_20210415.db"
@@ -1921,7 +1921,7 @@ mod_tratamento_server <- function(id){
       filename <- filesqlite$datapath
 
       # data <- ETLEBP::executa_tratamento_incremental(data, filename)
-      data <- executa_tratamento_incremental(data, filename)
+      data <- ETLEBPv2::executa_tratamento_incremental(data, filename)
 
 
       return(data)
@@ -2108,7 +2108,7 @@ mod_tratamento_server <- function(id){
 
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
       # data <- ETLEBP::cria_base_intermediaria_anp(origem_processos = i.inFile2$datapath)
-      data <- cria_base_intermediaria_anp(origem_processos = conteudo2())
+      data <- ETLEBPv2::cria_base_intermediaria_anp(origem_processos = conteudo2())
 
 
       #Criando dataset com casos novos
@@ -2118,7 +2118,7 @@ mod_tratamento_server <- function(id){
       filename <- filesqlite$datapath
 
       # data <- ETLEBP::executa_tratamento_incremental(data, filename)
-      data <- executa_tratamento_incremental(data, filename)
+      data <- ETLEBPv2::executa_tratamento_incremental(data, filename)
 
 
       return(data)
@@ -2296,7 +2296,7 @@ mod_tratamento_server <- function(id){
       if (is.null(i.inFile3)) return(NULL)
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
       # data <- ETLEBP::cria_base_intermediaria_bndes(origem_processos = i.inFile3$datapath)
-      data <- cria_base_intermediaria_bndes(origem_processos = conteudo3())
+      data <- ETLEBPv2::cria_base_intermediaria_bndes(origem_processos = conteudo3())
 
       #Criando dataset com casos novos
       #filename <- "data/DB_EIP/EIP_20210415.db"
@@ -2305,7 +2305,7 @@ mod_tratamento_server <- function(id){
       filename <- filesqlite$datapath
 
       # data <- ETLEBP::executa_tratamento_incremental(data, filename)
-      data <- executa_tratamento_incremental(data, filename)
+      data <- ETLEBPv2::executa_tratamento_incremental(data, filename)
 
 
       return(data)
@@ -2479,7 +2479,7 @@ mod_tratamento_server <- function(id){
       if (is.null(i.inFile4)) return(NULL)
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
       # data <- ETLEBP::cria_base_intermediaria_cnen(origem_processos = i.inFile4$datapath)
-      data <- cria_base_intermediaria_cnen(origem_processos = conteudo4())
+      data <- ETLEBPv2::cria_base_intermediaria_cnen(origem_processos = conteudo4())
 
       #Criando dataset com casos novos
       #filename <- "data/DB_EIP/EIP_20210415.db"
@@ -2488,7 +2488,7 @@ mod_tratamento_server <- function(id){
       filename <- filesqlite$datapath
 
       # data <- ETLEBP::executa_tratamento_incremental(data, filename)
-      data <- executa_tratamento_incremental(data, filename)
+      data <- ETLEBPv2::executa_tratamento_incremental(data, filename)
 
       return(data)
     })
@@ -2658,7 +2658,7 @@ mod_tratamento_server <- function(id){
       i.inFile5 <- input$i.file5
       if (is.null(i.inFile5)) return(NULL)
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
-      data <- cria_base_intermediaria_finep(origem_processos = conteudo5())
+      data <- ETLEBPv2::cria_base_intermediaria_finep(origem_processos = conteudo5())
 
       #Criando dataset com casos novos
       #filename <- "data/DB_EIP/EIP_20210415.db"
@@ -2667,7 +2667,7 @@ mod_tratamento_server <- function(id){
       filename <- filesqlite$datapath
 
       # data <- ETLEBP::executa_tratamento_incremental(data, filename)
-      data <- executa_tratamento_incremental(data, filename)
+      data <- ETLEBPv2::executa_tratamento_incremental(data, filename)
 
 
       return(data)
@@ -2844,7 +2844,7 @@ mod_tratamento_server <- function(id){
       if (is.null(i.inFile6)) return(NULL)
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
       # data <- ETLEBP::cria_base_intermediaria_fapesp(origem_processos = i.inFile6$datapath)
-      data <- cria_base_intermediaria_fapesp(origem_processos = df6.1)
+      data <- ETLEBPv2::cria_base_intermediaria_fapesp(origem_processos = df6.1)
 
 
       #Criando dataset com casos novos
@@ -2854,7 +2854,7 @@ mod_tratamento_server <- function(id){
       filename <- filesqlite$datapath
 
       # data <- ETLEBP::executa_tratamento_incremental(data, filename)
-      data <- executa_tratamento_incremental(data, filename)
+      data <- ETLEBPv2::executa_tratamento_incremental(data, filename)
 
 
       return(data)
@@ -3031,7 +3031,7 @@ mod_tratamento_server <- function(id){
 
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
       # data <- ETLEBP::cria_base_intermediaria_cnpq(origem_processos = i.inFile7 )
-      data <- cria_base_intermediaria_cnpq(origem_processos = conteudo7())
+      data <- ETLEBPv2::cria_base_intermediaria_cnpq(origem_processos = conteudo7())
 
       #Criando dataset com casos novos
       #filename <- "data/DB_EIP/EIP_20210415.db"
@@ -3040,7 +3040,7 @@ mod_tratamento_server <- function(id){
       filename <- filesqlite$datapath
 
       # data <- ETLEBP::executa_tratamento_incremental(data, filename)
-      data <- executa_tratamento_incremental(data, filename)
+      data <- ETLEBPv2::executa_tratamento_incremental(data, filename)
 
       #
       # con <- DBI::dbConnect(RSQLite::SQLite(),
