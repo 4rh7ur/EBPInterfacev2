@@ -824,7 +824,7 @@ mod_tratamento_server <- function(id){
       inFile2 <- input$file2
       if (is.null(inFile2)) return(NULL)
 
-      data <- ETLEBPv2::cria_base_intermediaria_anp(origem_processos = conteudo2c())
+      data <- ETLEBP::cria_base_intermediaria_anp(origem_processos = conteudo2c())
       #data <- cria_base_intermediaria_anp(origem_processos = conteudo2c())
 
 
@@ -833,7 +833,7 @@ mod_tratamento_server <- function(id){
       if (is.null(filesqlite)) return(NULL)
       fonte <- filesqlite$datapath
 
-      data <- ETLEBPv2::executa_tratamento_completo(data, fonte)
+      data <- ETLEBP::executa_tratamento_completo(data, fonte)
       #data <- executa_tratamento_completo(data, fonte)
 
       return(data)
