@@ -418,7 +418,15 @@ mod_tratamento_server <- function(id){
   install.packages(c("readxl","rio", "tools","readr","readODS"), dependencies = TRUE)
 }
   
-library(readxl)
+  library(readxl)
+  library(rio)
+  library(tools)
+  library(readr)
+  library(readODS)
+
+
+
+  
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     #Importando dados
