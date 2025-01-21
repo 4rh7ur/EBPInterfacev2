@@ -6,6 +6,12 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+
+if (!requireNamespace("pacman", quietly = TRUE)) {
+  install.packages("pacman", dependencies = TRUE)
+}
+library(readxl)
+
 mod_tratamento_ui <- function(id){
   ns <- NS(id)
   tagList(
