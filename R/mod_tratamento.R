@@ -7,11 +7,6 @@
 #'
 #' @importFrom shiny NS tagList
 
-if (!requireNamespace("readxl", quietly = TRUE)) {
-  install.packages("readxl", dependencies = TRUE)
-}
-library(readxl)
-
 mod_tratamento_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -418,7 +413,12 @@ mod_tratamento_ui <- function(id){
 #'
 #' @noRd
 mod_tratamento_server <- function(id){
-  print(getwd())
+  
+  if (!requireNamespace("readxl", quietly = TRUE)) {
+  install.packages("readxl", dependencies = TRUE)
+}
+  
+library(readxl)
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     #Importando dados
