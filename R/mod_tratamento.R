@@ -414,8 +414,8 @@ mod_tratamento_ui <- function(id){
 #' @noRd
 mod_tratamento_server <- function(id){
   
-  if (!requireNamespace("readxl", quietly = TRUE)) {
-  install.packages("readxl", dependencies = TRUE)
+  if (!requireNamespace(c("readxl","rio", "tools","readr","readODS"), quietly = TRUE)) {
+  install.packages(c("readxl","rio", "tools","readr","readODS"), dependencies = TRUE)
 }
   
 library(readxl)
