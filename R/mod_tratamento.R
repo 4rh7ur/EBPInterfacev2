@@ -633,7 +633,7 @@ mod_tratamento_server <- function(id){
     #Fazer o Download
     output$download <- downloadHandler(
       filename = function() {
-        paste("aneel_interm", ".csv", sep = "")
+        paste("aneel_interm", ".csv", sep = ",")
       },
       content = function(file) {
         write.csv(myData(), file, row.names = FALSE, fileEncoding = "Latin1")
@@ -1944,7 +1944,7 @@ mod_tratamento_server <- function(id){
     #Fazer o Download
     output$i.download <- downloadHandler(
       filename = function() {
-        paste("aneel_interm", ".csv", sep = "")
+        paste("aneel_interm", ".csv", sep = ",")
       },
       content = function(file) {
         write.csv(i.myData(), file, row.names = FALSE, fileEncoding = 'Latin1', sep = ';')
