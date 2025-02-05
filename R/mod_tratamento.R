@@ -450,8 +450,8 @@ mod_tratamento_server <- function(id){
       `Fonte BNDES` = c("Inovação", "CNPJ", "Unidade da Federação", "Número do contrato", "Data da contratação", "Prazo de amortização em meses", "Prazo de carência em meses", "Valor contratado", "Produto", "Modalidade de apoio", "Descrição do projeto", "Situação do contrato", "Cliente", "Natureza do cliente"),
       `Fonte CNEN` = c("Data de assinatura", "Data limite", "Categoria da tecnologia (dígito 2)", "Valor contratado", "Título do projeto", "Nome do agente executor", "Natureza do agente financiador", "Natureza do financiamento", "Natureza do agente executor", "Modalidade do financiamento", "UF de execução", "P&D ou Demonstração", "ID", NA),
       `Fonte CNPQ` = c("Grande área do conhecimento", "Área do conhecimento", "Subárea do conhecimento", "Ano de referência", "Título do projeto", "Categoria do nível", "Sigla da UF do destino", "Região do destino", "País do destino", "Valor pago", "Sigla da UF da origem", "Processo", "Instituição Destino", NA),
-      `Fonte FAPESP` = c("Número do processo", "Data de início", "Data de término", "Título em português", "Área do conhecimento", "Subárea do conhecimento", "Valor concedido", "Gasto executado", "Beneficiário", NA, NA, NA, NA, NA),
-      `Fonte FINEP` = c("Título", "Valor FINEP", "Valor liberado", "Data da liberação", "Data da assinatura", "Prazo de utilização", "Contrato", "Instrumento", "Proponente", "UF do Executor", "Status do projeto", NA, NA, NA),
+      `Fonte FAPESP` = c("Número do processo", "Data de início", "Data de término", "Título em português", "Área do conhecimento", "Subárea do conhecimento", "Valor concedido", "Beneficiário", NA, NA, NA, NA, NA,NA),
+      `Fonte FINEP` = c("Título", "Valor FINEP", "Valor liberado", "Data da assinatura", "Prazo de utilização", "Contrato", "Instrumento", "Proponente", "UF do Executor", "Status do projeto", NA, NA, NA,NA),
       stringsAsFactors = FALSE
     )
 
