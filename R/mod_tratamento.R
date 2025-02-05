@@ -2769,7 +2769,7 @@ mod_tratamento_server <- function(id){
       }
 
       # Encontrar a primeira linha sem NA
-      first_valid_row6 <- find_first_valid_row(preview)
+      first_valid_row <- find_first_valid_row(preview)
       if (is.na(first_valid_row)) {
         stop("Nenhuma linha válida encontrada no arquivo.")
       }
