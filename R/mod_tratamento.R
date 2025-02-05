@@ -1354,14 +1354,13 @@ mod_tratamento_server <- function(id){
       df5c <- df5c %>% rename(titulo = colunas_selecionadas5c[[1]],
                             valor_finep = colunas_selecionadas5c[[2]],
                             valor_liberado = colunas_selecionadas5c[[3]],
-                            data_liberacao = colunas_selecionadas5c[[4]],
-                            data_assinatura = colunas_selecionadas5c[[5]],
-                            prazo_utilizacao = colunas_selecionadas5c[[6]],
-                            contrato = colunas_selecionadas5c[[7]],
-                            instrumento = colunas_selecionadas5c[[8]],
-                            proponente = colunas_selecionadas5c[[9]],
-                            uf = colunas_selecionadas5c[[10]],
-                            status = colunas_selecionadas5c[[11]])
+                            data_assinatura = colunas_selecionadas5[[4]],
+                            prazo_utilizacao = colunas_selecionadas5[[5]],
+                            contrato = colunas_selecionadas5[[6]],
+                            instrumento = colunas_selecionadas5[[7]],
+                            proponente = colunas_selecionadas5[[8]],
+                            uf = colunas_selecionadas5[[9]],
+                            status = colunas_selecionadas5[[10]])
 
       # Exibir o dataframe com as colunas renomeadas
       # head(df,3)
@@ -2654,14 +2653,13 @@ mod_tratamento_server <- function(id){
       df5 <- df5 %>% rename(titulo = colunas_selecionadas5[[1]],
                             valor_finep = colunas_selecionadas5[[2]],
                             valor_liberado = colunas_selecionadas5[[3]],
-                            data_liberacao = colunas_selecionadas5[[4]],
-                            data_assinatura = colunas_selecionadas5[[5]],
-                            prazo_utilizacao = colunas_selecionadas5[[6]],
-                            contrato = colunas_selecionadas5[[7]],
-                            instrumento = colunas_selecionadas5[[8]],
-                            proponente = colunas_selecionadas5[[9]],
-                            uf = colunas_selecionadas5[[10]],
-                            status = colunas_selecionadas5[[11]])
+                            data_assinatura = colunas_selecionadas5[[4]],
+                            prazo_utilizacao = colunas_selecionadas5[[5]],
+                            contrato = colunas_selecionadas5[[6]],
+                            instrumento = colunas_selecionadas5[[7]],
+                            proponente = colunas_selecionadas5[[8]],
+                            uf = colunas_selecionadas5[[9]],
+                            status = colunas_selecionadas5[[10]])
 
       # Exibir o dataframe com as colunas renomeadas
       # head(df,3)
