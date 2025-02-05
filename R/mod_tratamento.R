@@ -638,7 +638,7 @@ mod_tratamento_server <- function(id){
         paste("aneel_interm", ".csv", sep = "")
       },
       content = function(file) {
-        write.csv(myData(), file, row.names = FALSE, sep = ";", fileEncoding = "Latin1")
+        write.csv2(myData(), file, row.names = FALSE, sep = ";", fileEncoding = "Latin1")
       }
     )
 
@@ -1949,7 +1949,7 @@ mod_tratamento_server <- function(id){
         paste("aneel_interm", ".csv", sep = "")
       },
       content = function(file) {
-        write.csv(i.myData(), file, row.names = FALSE, fileEncoding = 'Latin1', sep = ';')
+        write.csv2(i.myData(), file, row.names = FALSE, fileEncoding = 'Latin1', sep = ';')
       }
     )
 
