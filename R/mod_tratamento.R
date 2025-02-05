@@ -414,8 +414,8 @@ mod_tratamento_ui <- function(id){
 #' @noRd
 mod_tratamento_server <- function(id){
   
-  if (!requireNamespace(c("readxl","rio", "tools","readr","readODS"), quietly = TRUE)) {
-  install.packages(c("readxl","rio", "tools","readr","readODS"), dependencies = TRUE)
+  if (!requireNamespace(c("readxl","rio", "tools","readr","readODS", "tidyr","dplyr"), quietly = TRUE)) {
+  install.packages(c("readxl","rio", "tools","readr","readODS", "tidyr","dplyr"), dependencies = TRUE)
 }
   
   library(readxl)
@@ -423,6 +423,8 @@ mod_tratamento_server <- function(id){
   library(tools)
   library(readr)
   library(readODS)
+  library(tidyr)
+  library(dplyr)
 
 
 
@@ -633,10 +635,10 @@ mod_tratamento_server <- function(id){
     #Fazer o Download
     output$download <- downloadHandler(
       filename = function() {
-        paste("aneel_interm", ".csv", sep = ",")
+        paste("aneel_interm", ".csv", sep = "")
       },
       content = function(file) {
-        write.csv(myData(), file, row.names = FALSE, fileEncoding = "Latin1")
+        write.csv(myData(), file, row.names = FALSE, sep = ",", fileEncoding = "Latin1")
       }
     )
 
@@ -1467,7 +1469,7 @@ mod_tratamento_server <- function(id){
       }
 
       # Encontrar a primeira linha sem NA
-      first_valid_row6 <- find_first_valid_row(preview)
+      first_valid_row <- find_first_valid_row(preview)
       if (is.na(first_valid_row)) {
         stop("Nenhuma linha válida encontrada no arquivo.")
       }
@@ -1944,10 +1946,10 @@ mod_tratamento_server <- function(id){
     #Fazer o Download
     output$i.download <- downloadHandler(
       filename = function() {
-        paste("aneel_interm", ".csv", sep = ",")
+        paste("aneel_interm", ".csv", sep = "")
       },
       content = function(file) {
-        write.csv(i.myData(), file, row.names = FALSE, fileEncoding = 'Latin1', sep = ';')
+        write.csv(i.myData(), file, row.names = FALSE, fileEncoding = 'Latin1', sep = ',')
       }
     )
 
