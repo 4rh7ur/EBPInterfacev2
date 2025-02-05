@@ -1477,14 +1477,14 @@ mod_tratamento_server <- function(id){
       # Ler o arquivo completo a partir da linha válida identificada
       if (ext == "csv") {
         dados <- tryCatch({
-          rio::import(input$file6$datapath, fread_args = list(skip = first_valid_row6-1))
+          rio::import(input$file6$datapath, fread_args = list(skip = first_valid_row-1))
         }, error = function(e) {
-          readr::read_csv2(input$file6$datapath, skip = first_valid_row6-1, col_names = T)
+          readr::read_csv2(input$file6$datapath, skip = first_valid_row-1, col_names = T)
         })
       } else if (ext == "xlsx") {
-        dados <- readxl::read_excel(input$file6$datapath, sheet = input$sheet6c, skip = first_valid_row6-1, col_names = T)
+        dados <- readxl::read_excel(input$file6$datapath, sheet = input$sheet6c, skip = first_valid_row-1, col_names = T)
       } else if (ext == "ods") {
-        dados <- read_ods(input$file6$datapath, sheet = input$sheet6c, skip = first_valid_row6-1, col_names = T)
+        dados <- read_ods(input$file6$datapath, sheet = input$sheet6c, skip = first_valid_row-1, col_names = T)
       }
 
       return(dados)
@@ -2777,14 +2777,14 @@ mod_tratamento_server <- function(id){
       # Ler o arquivo completo a partir da linha válida identificada
       if (ext == "csv") {
         dados <- tryCatch({
-          rio::import(input$i.file6$datapath, fread_args = list(skip = first_valid_row6-1))
+          rio::import(input$i.file6$datapath, fread_args = list(skip = first_valid_row-1))
         }, error = function(e) {
-          readr::read_csv2(input$i.file6$datapath, skip = first_valid_row6-1, col_names = T)
+          readr::read_csv2(input$i.file6$datapath, skip = first_valid_row-1, col_names = T)
         })
       } else if (ext == "xlsx") {
-        dados <- readxl::read_excel(input$i.file6$datapath, sheet = input$sheet6, skip = first_valid_row6-1, col_names = T)
+        dados <- readxl::read_excel(input$i.file6$datapath, sheet = input$sheet6, skip = first_valid_row-1, col_names = T)
       } else if (ext == "ods") {
-        dados <- read_ods(input$i.file6$datapath, sheet = input$sheet6, skip = first_valid_row6-1, col_names = T)
+        dados <- read_ods(input$i.file6$datapath, sheet = input$sheet6, skip = first_valid_row-1, col_names = T)
       }
 
       return(dados)
