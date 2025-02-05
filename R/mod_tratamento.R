@@ -413,11 +413,11 @@ mod_tratamento_ui <- function(id){
 #'
 #' @noRd
 mod_tratamento_server <- function(id){
-  
+
   if (!requireNamespace(c("readxl","rio", "tools","readr","readODS", "tidyr","dplyr"), quietly = TRUE)) {
   install.packages(c("readxl","rio", "tools","readr","readODS", "tidyr","dplyr"), dependencies = TRUE)
 }
-  
+
   library(readxl)
   library(rio)
   library(tools)
@@ -428,7 +428,7 @@ mod_tratamento_server <- function(id){
 
 
 
-  
+
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     #Importando dados
@@ -617,7 +617,7 @@ mod_tratamento_server <- function(id){
       inFile <- input$file1
       if (is.null(inFile)) return(NULL)
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
-      data <- ETLEBP::cria_base_intermediaria_aneel(origem_processos = inFile$datapath)
+      data <- ETLEBP::cria_base_intermediaria_aneel(origem_processos = conteudo1c())
       #data <- cria_base_intermediaria_aneel(origem_processos = conteudo1c())
 
       #fonte <- "data/DB_EIP/EIP_20210415.db"
