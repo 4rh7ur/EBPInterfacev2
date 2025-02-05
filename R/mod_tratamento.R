@@ -1540,8 +1540,7 @@ mod_tratamento_server <- function(id){
                             area_do_conhecimento = colunas_selecionadas6c[[5]],
                             subarea_do_conhecimento = colunas_selecionadas6c[[6]],
                             valor_concedido = colunas_selecionadas6c[[7]],
-                            gasto_executado = colunas_selecionadas6c[[8]],
-                            beneficiario = colunas_selecionadas6c[[9]])
+                            beneficiario = colunas_selecionadas6c[[8]])
       # colnames(df) <- colunas_selecionadas
       # print(colunas_selecionadas)
 
@@ -2840,8 +2839,7 @@ mod_tratamento_server <- function(id){
                           area_do_conhecimento = colunas_selecionadas6[[5]],
                           subarea_do_conhecimento = colunas_selecionadas6[[6]],
                           valor_concedido = colunas_selecionadas6[[7]],
-                          gasto_executado = colunas_selecionadas6[[8]],
-                          beneficiario = colunas_selecionadas6[[9]])
+                          beneficiario = colunas_selecionadas6[[8]])
       # colnames(df) <- colunas_selecionadas
       # print(colunas_selecionadas)
 
