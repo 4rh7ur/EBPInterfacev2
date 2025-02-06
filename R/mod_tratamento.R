@@ -414,8 +414,8 @@ mod_tratamento_ui <- function(id){
 #' @noRd
 mod_tratamento_server <- function(id){
 
-  if (!requireNamespace(c("readxl","rio", "tools","readr","readODS", "tidyr","dplyr"), quietly = TRUE)) {
-  install.packages(c("readxl","rio", "tools","readr","readODS", "tidyr","dplyr"), dependencies = TRUE)
+  if (!requireNamespace(c("readxl","rio", "tools","readr","readODS", "tidyr","dplyr", "abjutils"), quietly = TRUE)) {
+  install.packages(c("readxl","rio", "tools","readr","readODS", "tidyr","dplyr","abjutils"), dependencies = TRUE)
 }
 
   library(readxl)
@@ -425,6 +425,7 @@ mod_tratamento_server <- function(id){
   library(readODS)
   library(tidyr)
   library(dplyr)
+  library(abjutils)
 
 
 
@@ -540,7 +541,7 @@ mod_tratamento_server <- function(id){
       # Ler o arquivo completo a partir da linha válida identificada
       if (ext == "csv") {
         dados <- tryCatch({
-          rio::import(input$file1$datapath, fread_args = list(skip = first_valid_row-1))
+          rio::import(input$file1$datapath, fread_args = list(skip = first_valid_row-1), encoding = 'Latin-1')
         }, error = function(e) {
           readr::read_csv2(input$file1$datapath, skip = first_valid_row-1)
         })
@@ -937,7 +938,7 @@ mod_tratamento_server <- function(id){
       # Ler o arquivo completo a partir da linha válida identificada
       if (ext == "csv") {
         dados <- tryCatch({
-          rio::import(input$file3$datapath, fread_args = list(skip = first_valid_row-1))
+          rio::import(input$file3$datapath, fread_args = list(skip = first_valid_row-1), encoding = 'Latin-1')
         }, error = function(e) {
           readr::read_csv2(input$file3$datapath, skip = first_valid_row-1)
         })
@@ -1843,7 +1844,7 @@ mod_tratamento_server <- function(id){
       # Ler o arquivo completo a partir da linha válida identificada
       if (ext == "csv") {
         dados <- tryCatch({
-          rio::import(input$i.file1$datapath, fread_args = list(skip = first_valid_row-1))
+          rio::import(input$i.file1$datapath, fread_args = list(skip = first_valid_row-1), encoding = 'Latin-1')
         }, error = function(e) {
           readr::read_csv2(input$i.file1$datapath, skip = first_valid_row-1)
         })
@@ -2226,7 +2227,7 @@ mod_tratamento_server <- function(id){
       # Ler o arquivo completo a partir da linha válida identificada
       if (ext == "csv") {
         dados <- tryCatch({
-          rio::import(input$i.file3$datapath, fread_args = list(skip = first_valid_row-1))
+          rio::import(input$i.file3$datapath, fread_args = list(skip = first_valid_row-1), encoding = 'Latin-1')
         }, error = function(e) {
           readr::read_csv2(input$i.file3$datapath, skip = first_valid_row-1)
         })
