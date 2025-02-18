@@ -961,7 +961,7 @@ mod_tratamento_server <- function(id){
       col_names <- names(df3c)
 
       # Definir as variáveis esperadas
-      variaveis_esperadas3c <- subset(vars, vars$Base == 'Fonte ANP')[,2]
+      variaveis_esperadas3c <- subset(vars, vars$Base == 'Fonte BNDES')[,2]
 
       # Criar um selectInput para cada variável esperada dentro de colunas para disposição lado a lado
       inputs <- lapply(variaveis_esperadas3c, function(var) {
