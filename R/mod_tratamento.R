@@ -856,7 +856,7 @@ mod_tratamento_server <- function(id){
         paste("anp_interm", ".csv", sep = "")
       },
       content = function(file) {
-        write.csv(myData2(), file, row.names = FALSE, fileEncoding = 'Latin1')
+        write.csv2(myData2(), file, row.names = FALSE, fileEncoding = 'Latin1')
       }
     )
     #BNDES----
@@ -1017,7 +1017,7 @@ mod_tratamento_server <- function(id){
       inFile3 <- input$file3
       if (is.null(inFile3)) return(NULL)
       #data <- fread(inFile$datapath, header = input$header, sep = input$sep, nrows = as.numeric(input$nrows))
-      data <- ETLEBP::cria_base_intermediaria_bndes(origem_processos = inFile3$datapath)
+      data <- ETLEBP::cria_base_intermediaria_bndes(origem_processos = conteudo3c())
       #data <- cria_base_intermediaria_bndes(origem_processos = conteudo3c())
 
       #fonte <- "data/DB_EIP/EIP_20210415.db"
@@ -1575,7 +1575,7 @@ mod_tratamento_server <- function(id){
         paste("fapesp_interm", ".csv", sep = "")
       },
       content = function(file) {
-        write.csv(myData6(), file, row.names = FALSE, fileEncoding = "Latin1")
+        write.csv2(myData6(), file, row.names = FALSE, fileEncoding = "Latin1")
       }
     )
 
