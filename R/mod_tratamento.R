@@ -1037,7 +1037,7 @@ mod_tratamento_server <- function(id){
         paste("bndes_interm", ".csv", sep = "")
       },
       content = function(file) {
-        write.csv(myData3(), file, row.names = FALSE, fileEncoding = "Latin1")
+        write.csv2(myData3(), file, row.names = FALSE, fileEncoding = "Latin1")
       }
     )
     #CNEN----
@@ -1394,7 +1394,7 @@ mod_tratamento_server <- function(id){
         paste("finep_interm", ".csv", sep = "")
       },
       content = function(file) {
-        write.csv(myData5(), file, row.names = FALSE, fileEncoding = 'Latin1')
+        write.csv2(myData5(), file, row.names = FALSE, fileEncoding = 'Latin1')
       }
     )
 
@@ -2145,7 +2145,7 @@ mod_tratamento_server <- function(id){
         paste("anp_interm", ".csv", sep = "")
       },
       content = function(file) {
-        write.csv(i.myData2(), file, row.names = FALSE, fileEncoding = 'Latin1', sep = ';')
+        write.csv2(i.myData2(), file, row.names = FALSE, fileEncoding = 'Latin1', sep = ';')
       }
     )
     #BNDES ----
@@ -2332,7 +2332,7 @@ mod_tratamento_server <- function(id){
         paste("bndes_interm", ".csv", sep = "")
       },
       content = function(file) {
-        write.csv(i.myData3(), file, row.names = FALSE, fileEncoding = 'Latin1')
+        write.csv2(i.myData3(), file, row.names = FALSE, fileEncoding = 'Latin1')
       }
     )
     #CNEN ----
@@ -2693,7 +2693,7 @@ mod_tratamento_server <- function(id){
         paste("finep_interm", ".csv", sep = "")
       },
       content = function(file) {
-        write.csv(i.myData5(), file, row.names = FALSE, fileEncoding = "Latin1")
+        write.csv2(i.myData5(), file, row.names = FALSE, fileEncoding = "Latin1")
       }
     )
 
@@ -2879,7 +2879,7 @@ mod_tratamento_server <- function(id){
         paste("fapesp_interm", ".csv", sep = "")
       },
       content = function(file) {
-        write.csv(i.myData6(), file, row.names = FALSE, fileEncoding = 'Latin1')
+        write.csv2(i.myData6(), file, row.names = FALSE, fileEncoding = 'Latin1')
       }
     )
 
