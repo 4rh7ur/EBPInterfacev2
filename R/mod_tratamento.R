@@ -1215,7 +1215,7 @@ mod_tratamento_server <- function(id){
         paste("cnen_interm", ".csv", sep = "")
       },
       content = function(file) {
-        write.csv(myData4(), file, row.names = FALSE, fileEncoding = 'Latin1')
+        write.csv2(myData4(), file, row.names = FALSE, fileEncoding = 'Latin1')
       }
     )
     #FINEP----
@@ -1760,7 +1760,7 @@ mod_tratamento_server <- function(id){
         paste("cnpq_interm", ".csv", sep = "")
       },
       content = function(file) {
-        write.csv(myData7(), file, row.names = FALSE, fileEncoding = "Latin1")
+        write.csv2(myData7(), file, row.names = FALSE, fileEncoding = "Latin1")
       }
     )
     #Carga incremental ----
@@ -2514,7 +2514,7 @@ mod_tratamento_server <- function(id){
         paste("cnen_interm", ".csv", sep = "")
       },
       content = function(file) {
-        write.csv(i.myData4(), file, row.names = FALSE, fileEncoding = 'Latin1')
+        write.csv2(i.myData4(), file, row.names = FALSE, fileEncoding = 'Latin1')
       }
     )
     #FINEP ----
@@ -3076,7 +3076,7 @@ mod_tratamento_server <- function(id){
         paste("cnpq_interm", ".csv", sep = "")
       },
       content = function(file) {
-        write.csv(i.myData7(), file, row.names = FALSE, fileEncoding = 'Latin1')
+        write.csv2(i.myData7(), file, row.names = FALSE, fileEncoding = 'Latin1')
       }
     )
 
